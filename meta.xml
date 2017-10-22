@@ -1,0 +1,12 @@
+<meta>
+    <info name="LSRP" author="LSRP Team" type="gamemode" />
+
+    <!-- MySQL -->
+    <assembly ref="System.Data.dll"/>
+	  <assembly ref="MySql.Data.dll"/>
+
+	  <!-- Scripts -->
+	  <script src="Database/DB.cs" type="server" lang="csharp" />
+    <script src="LSRP.cs" type="server" lang="csharp" />
+    <script src="commands.cs" type="server" lang="csharp" />
+</meta>
