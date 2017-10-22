@@ -97,6 +97,8 @@ namespace lsrp_gamemode
             while(Reader.Read())
             {
                 player.setSkin((PedHash) Reader.GetInt32("skin"));
+                player.name = Reader.GetString("name");
+                player.nametag = Reader.GetString("name");
             }
 
             // Unfreeze
