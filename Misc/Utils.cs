@@ -7,14 +7,13 @@ using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using System.Text;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace lsrp_gamemode.Utils
+namespace lsrp_gamemode.Misc
 {
-    public class Misc : Script
+    public class Utils : Script
     {
-        public static string test = "test";
-        /*public Misc() {}
-
         public static string Sha256(string randomString)
         {
             System.Security.Cryptography.SHA256Managed crypt = new System.Security.Cryptography.SHA256Managed();
@@ -25,6 +24,13 @@ namespace lsrp_gamemode.Utils
                 hash.Append(theByte.ToString("x2"));
             }
             return hash.ToString();
-        }*/
+        }
+
+        public static string DictionaryToJSON(Dictionary<int, string> dict)
+        {
+            var entries = dict.Select(d =>
+                string.Format("\"{0}\": [{1}]", d.Key, string.Join(",", d.Value)));
+            return "{" + string.Join(",", entries) + "}";
+        }
     }
 }

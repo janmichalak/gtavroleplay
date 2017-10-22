@@ -58,12 +58,14 @@
     <Compile Include="commands.cs" />
     <Compile Include="Database\DB.cs" />
     <Compile Include="LSRP.cs" />
+    <Compile Include="Player\ClientEvents.cs" />
     <Compile Include="Player\Login.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\Misc.cs" />
+    <Compile Include="Misc\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="meta.xml" />
+    <Content Include="Player\CharacterMenu.js" />
     <Content Include="types-gt-mp\Declarations.d.ts" />
     <Content Include="types-gt-mp\Definitions\Declarations.d.ts" />
     <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Contracts.d.ts" />

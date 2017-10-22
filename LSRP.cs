@@ -8,8 +8,8 @@ using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
-using lsrp_gamemode.Utils;
-using lsrp_gamemode.DBase;
+using lsrp_gamemode.Misc;
+using lsrp_gamemode.Player;
 
 namespace lsrp_gamemode
 {
@@ -27,12 +27,18 @@ namespace lsrp_gamemode
             // MySQL init
             db.Connect();
 
-            API.consoleOutput(Misc.test);
-            API.consoleOutput(Database.myConnectionString);
-            //API.consoleOutput(Misc.Sha256("test123"));
+            API.consoleOutput(Utils.Sha256("chuj123"));
 
             // Events
             API.onPlayerConnected += API_onPlayerConnected;
+            API.onServerResourceStart += API_onServerResourceStart;
+            API.onClientEventTrigger += ClientEvents.API_OnClientEvent;
+        }
+
+        // OnServerResourceStart
+        private void API_onServerResourceStart(string resource)
+        {
+            
         }
 
         // OnPlayerConnected

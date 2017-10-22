@@ -9,38 +9,34 @@ using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 
-public class Commands : Script
+namespace lsrp_gamemode
 {
-	public Commands() {
-	}
-
-    /**
-     * COMMANDS
-     **/
-
-	[Command("pos")]
-	public void cmd_Pos(Client player)
-	{
-		Vector3 playerPosition = API.getEntityPosition(player);
-		API.sendChatMessageToPlayer(player, "X: " + playerPosition.X + " Y: " + playerPosition.Y + " Z: " + playerPosition.Z);
-	}
-
-	[Command("login", "Użycie: /login [hasło]", SensitiveInfo = true, GreedyArg = true)]
-	public void cmd_Login(Client player, string password)
-	{
-		// Check login
-		if(!Database.loginPlayer(player.socialClubName, password)) {
-            API.sendChatMessageToPlayer(player, "Podałeś błędne hasło!");
-            return;
+    public class Commands : Script
+    {
+        public Commands()
+        {
         }
 
-		// Unfreeze
-	    API.sendChatMessageToPlayer(player, "Zalogowałes się!");
-	    API.setEntityInvincible (player, false);
-        API.freezePlayer(player, false);
+        /**
+         * COMMANDS
+         **/
 
-        // Position
-        player.position = new Vector3(102.5816, -1944.02, 20.80372);
-        API.setEntityDimension(player, 0);
-	}
+        [Command("pos")]
+        public void cmd_Pos(Client player)
+        {
+            Vector3 playerPosition = API.getEntityPosition(player);
+            API.sendChatMessageToPlayer(player, "X: " + playerPosition.X + " Y: " + playerPosition.Y + " Z: " + playerPosition.Z);
+        }
+
+        [Command("login", "Użycie: /login [hasło]", SensitiveInfo = true, GreedyArg = true)]
+        public void cmd_Login(Client player, string password)
+        {
+            // Check login
+            if (!Database.loginPlayer(player, password, API))
+            {
+                API.sendChatMessageToPlayer(player, "Podałeś błędne hasło!");
+                return;
+            }
+        }
+    }
 }
