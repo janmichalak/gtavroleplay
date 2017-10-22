@@ -8,35 +8,40 @@ using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
+using lsrp_gamemode.Utils;
+using lsrp_gamemode.DBase;
 
-
-public class LSRP : Script
+namespace lsrp_gamemode
 {
-    // Private statics
-    public static Database db = new Database();
-
-    // Random
-    private static Random Rnd = new Random();
-
-    // Construct
-    public LSRP()
+    public class LSRP : Script
     {
-        // MySQL init
-        db.Connect();
+        // Private statics
+        public static Database db = new Database();
 
-        API.consoleOutput(Database.myConnectionString);
-        API.consoleOutput(Misc.Sha256("test123"));
+        // Random
+        private static Random Rnd = new Random();
 
-        // Events
-        API.onPlayerConnected += API_onPlayerConnected;
-    }
+        // Construct
+        public LSRP()
+        {
+            // MySQL init
+            db.Connect();
 
-    // OnPlayerConnected
-    private void API_onPlayerConnected(Client player)
-    {
-        API.setEntityDimension(player, -1);
-        API.setEntityInvincible(player, true);
-        API.freezePlayer(player, true);
-        API.sendChatMessageToPlayer(player, "Wpisz /login [hasło] żeby się zalogować!");
+            API.consoleOutput(Misc.test);
+            API.consoleOutput(Database.myConnectionString);
+            //API.consoleOutput(Misc.Sha256("test123"));
+
+            // Events
+            API.onPlayerConnected += API_onPlayerConnected;
+        }
+
+        // OnPlayerConnected
+        private void API_onPlayerConnected(Client player)
+        {
+            API.setEntityDimension(player, -1);
+            API.setEntityInvincible(player, true);
+            API.freezePlayer(player, true);
+            API.sendChatMessageToPlayer(player, "Wpisz /login [hasło] żeby się zalogować!");
+        }
     }
 }

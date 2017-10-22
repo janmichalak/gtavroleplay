@@ -8,17 +8,23 @@ using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using System.Text;
 
-public class Misc : Script
+namespace lsrp_gamemode.Utils
 {
-    public static string Sha256(string randomString)
+    public class Misc : Script
     {
-        System.Security.Cryptography.SHA256Managed crypt = new System.Security.Cryptography.SHA256Managed();
-        System.Text.StringBuilder hash = new System.Text.StringBuilder();
-        byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString), 0, Encoding.UTF8.GetByteCount(randomString));
-        foreach (byte theByte in crypto)
+        public static string test = "test";
+        /*public Misc() {}
+
+        public static string Sha256(string randomString)
         {
-            hash.Append(theByte.ToString("x2"));
-        }
-        return hash.ToString();
+            System.Security.Cryptography.SHA256Managed crypt = new System.Security.Cryptography.SHA256Managed();
+            System.Text.StringBuilder hash = new System.Text.StringBuilder();
+            byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString), 0, Encoding.UTF8.GetByteCount(randomString));
+            foreach (byte theByte in crypto)
+            {
+                hash.Append(theByte.ToString("x2"));
+            }
+            return hash.ToString();
+        }*/
     }
 }
