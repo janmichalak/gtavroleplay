@@ -11,6 +11,7 @@
     <script src="Player/Login.cs" type="server" lang="csharp" />
     <script src="Player/ClientEvents.cs" type="server" lang="csharp" />
     <script src="Player/CharacterMenu.js" type="client" lang="javascript" />
+    <script src="Player/MoneyDisplay.js" type="client" lang="javascript" />
     <script src="LSRP.cs" type="server" lang="csharp" />
     <script src="commands.cs" type="server" lang="csharp" />
 </meta>

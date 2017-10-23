@@ -8,6 +8,7 @@ using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
+using lsrp_gamemode.Player;
 
 namespace lsrp_gamemode
 {
@@ -26,6 +27,12 @@ namespace lsrp_gamemode
         {
             Vector3 playerPosition = API.getEntityPosition(player);
             API.sendChatMessageToPlayer(player, "X: " + playerPosition.X + " Y: " + playerPosition.Y + " Z: " + playerPosition.Z);
+        }
+
+        [Command("qs")]
+        public void cmd_Qs(Client player)
+        {
+            Login.LSRP_DisconnectPlayer(player, true);
         }
 
         [Command("login", "Użycie: /login [hasło]", SensitiveInfo = true, GreedyArg = true)]

@@ -55,9 +55,13 @@ namespace lsrp_gamemode
             }
         }
 
-        /** 
-          *	Check is player exists
-          */
+        /// <summary>
+        /// Check is player exists
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="password"></param>
+        /// <param name="API"></param>
+        /// <returns></returns>
         public static Boolean loginPlayer(Client player, string password, API API)
         {
             command.CommandText = "SELECT * FROM users AS u JOIN characters AS c ON c.owner = u.id WHERE u.username = '" + player.name + "' AND u.hash = '" + Utils.Sha256(password) + "'";
@@ -86,19 +90,77 @@ namespace lsrp_gamemode
             }
         }
 
-        /**
-         * Get character data if logged.
-         * */
+        /// <summary>
+        ///  TODO: Nie wykonuje sie to gówno
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="value"></param>
+        public static void UpdateCrash(Client player, Boolean value)
+        {
+            int crash = 0;
+            if (value) crash = 1;
+            API.shared.consoleOutput(crash.ToString());
+            command.CommandText = "UPDATE characters SET crash = " + crash + " WHERE cid = " + player.getData("pUID");
+
+            try
+            {
+                command.ExecuteNonQuery();
+                return;
+            } catch (MySqlException ex) { }
+        }
+
+        /// <summary>
+        /// Save player to DB.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="save_pos"></param>
+        /// <returns></returns>
+        public static Boolean SavePlayer(Client player, Boolean save_pos = false)
+        {
+            command.CommandText = "UPDATE characters SET money = " + player.getData("pCash") + ", health = " + player.health;
+            if(save_pos)
+            {
+                Vector3 pos = player.position;
+                command.CommandText += ", crash = 1, posx = '" + pos.X + "', posy = '" + pos.Y + "', posz = '" + pos.Z + "', dimension = " + player.getData("pVW");
+            }
+            command.CommandText += " WHERE cid = " + player.getData("pUID");
+
+            try
+            {
+                command.ExecuteNonQuery();
+                return true;
+            }   catch (MySqlException ex) { return false; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="char_id"></param>
         public static void GetCharacterData(Client player, int char_id)
         {
             command.CommandText = "SELECT * FROM characters WHERE cid = " + char_id;
             Reader = command.ExecuteReader();
 
+            double posX = 0.0, posY = 0.0, posZ = 0.0;
+            bool is_crash = false;
             while(Reader.Read())
             {
-                player.setSkin((PedHash) Reader.GetInt32("skin"));
-                player.name = Reader.GetString("name");
-                player.nametag = Reader.GetString("name");
+                player.setData("pUID", Reader.GetInt32("cid"));
+                player.setData("pSkin", (PedHash) Reader.GetInt32("skin"));
+                player.setData("pName", Reader.GetString("name"));
+                player.setData("pDisplayName", Reader.GetString("name"));
+                player.setData("pCash", Reader.GetInt32("money"));
+                player.setData("pVW", Reader.GetInt32("dimension"));
+
+                posX = Reader.GetDouble("posx");
+                posY = Reader.GetDouble("posy");
+                posZ = Reader.GetDouble("posz");
+
+                if(Reader.GetInt32("crash") == 1)
+                {
+                    is_crash = true;
+                }
             }
 
             // Unfreeze
@@ -111,6 +173,7 @@ namespace lsrp_gamemode
             player.position = new Vector3(102.5816, -1944.02, 20.80372);
             API.shared.setEntityDimension(player, 0);
 
+            Login.OnPlayerLogin(player, posX, posY, posZ, is_crash);
             Reader.Close();
             return;
         }

@@ -14,6 +14,12 @@ namespace lsrp_gamemode.Misc
 {
     public class Utils : Script
     {
+        public static void SetMoney(Client player, int value)
+        {
+            player.setData("pCash", value);
+            API.shared.triggerClientEvent(player, "update_money_display", value);
+        }
+
         public static string Sha256(string randomString)
         {
             System.Security.Cryptography.SHA256Managed crypt = new System.Security.Cryptography.SHA256Managed();
