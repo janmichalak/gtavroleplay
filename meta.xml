@@ -14,4 +14,5 @@
     <script src="Player/MoneyDisplay.js" type="client" lang="javascript" />
     <script src="LSRP.cs" type="server" lang="csharp" />
     <script src="commands.cs" type="server" lang="csharp" />
+    <script src="Config.cs" type="server" lang="csharp" />
 </meta>

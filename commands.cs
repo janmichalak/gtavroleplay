@@ -45,5 +45,23 @@ namespace lsrp_gamemode
                 return;
             }
         }
+        [Command("me", "Użycie: /me [akcja]", GreedyArg = true)]
+        public void cmd_me(Client player, string action)
+        {
+            List<Client> playerList = API.getPlayersInRadiusOfPlayer(10, player);
+            foreach (Client p in playerList)
+            {
+                API.sendChatMessageToPlayer(p, Config.COLOR_ME, "** " + player.name + " " + action);
+            }
+        }
+        [Command("do", "Użycie: /do [akcja]", GreedyArg = true)]
+        public void cmd_do(Client player, string action)
+        {
+            List<Client> playerList = API.getPlayersInRadiusOfPlayer(10, player);
+            foreach (Client p in playerList)
+            {
+                API.sendChatMessageToPlayer(p, Config.COLOR_DO, "** " + action + " (( " + player.name + " ))");
+            }
+        }
     }
 }

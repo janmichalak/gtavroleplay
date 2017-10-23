@@ -15,7 +15,7 @@ namespace lsrp_gamemode
 {
     public class Database : Script
     {
-        public static string myConnectionString = "SERVER=localhost;" + "DATABASE=lsrpv;" + "UID=lsrpv;" + "PASSWORD=nEenaYKMJtkS;";
+        public static string myConnectionString = String.Format("SERVER={0};DATABASE={1};UID={2};PASSWORD={3}", Config.DB_HOST,Config.DB_DB,Config.DB_USER,Config.DB_PASS);
         public static MySqlConnection connection;
         public static MySqlCommand command;
         public static MySqlDataReader Reader;
