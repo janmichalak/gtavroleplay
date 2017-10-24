@@ -45,7 +45,7 @@ namespace lsrp_gamemode
         [Command("login", "Użycie: /login [hasło]", SensitiveInfo = true, GreedyArg = true)]
         public void cmd_Login(Client player, string password)
         {
-            if(player.getData("logged") == true)
+            if (player.getData("logged") == true)
             {
                 API.sendChatMessageToPlayer(player, "Jesteś już zalogowany.");
                 return;
@@ -81,6 +81,15 @@ namespace lsrp_gamemode
             foreach (Client p in playerList)
             {
                 API.sendChatMessageToPlayer(p, Config.COLOR_B, "(( " + player.getData("globalname") + " [" + player.getData("data").id + "]: " + msg + " ))");
+            }
+        }
+        [Command("w", "Użycie: /w [ID] [wiadomość]", GreedyArg = true)]
+        public void cmd_w(Client player, int id, string msg)
+        {
+            if (PlayerClass.GetPlayerById(id) != null && PlayerClass.GetPlayerID(player)==id)
+            {
+                API.sendChatMessageToPlayer(player, "~#ffc973~", "(( " + PlayerClass.GetPlayerById(id).getData("globalname") + " [" + PlayerClass.GetPlayerID(PlayerClass.GetPlayerById(id)) + "]: " + msg + " ))");
+                API.sendChatMessageToPlayer(PlayerClass.GetPlayerById(id), "~#fdae33~", "(( " + player.getData("globalname") + " [" + PlayerClass.GetPlayerID(player) + "]: " + msg + " ))");
             }
         }
     }
