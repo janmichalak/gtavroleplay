@@ -57,11 +57,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="commands.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Config\Config.cs" />
+    <Compile Include="Config\DBConfig.cs" />
     <Compile Include="Database\DB.cs" />
     <Compile Include="LSRP.cs" />
     <Compile Include="Player\ClientEvents.cs" />
     <Compile Include="Player\Login.cs" />
+    <Compile Include="Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Misc\Utils.cs" />
   </ItemGroup>
