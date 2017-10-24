@@ -6,13 +6,15 @@
 	  <assembly ref="MySql.Data.dll"/>
 
 	  <!-- Scripts -->
+    <script src="Config/Config.cs" type="server" lang="csharp" />
+    <script src="Config/DBConfig.cs" type="server" lang="csharp" />
 	  <script src="Database/DB.cs" type="server" lang="csharp" />
     <script src="Misc/Utils.cs" type="server" lang="csharp" />
     <script src="Player/Login.cs" type="server" lang="csharp" />
+    <script src="Player/Player.cs" type="server" lang="csharp" />
     <script src="Player/ClientEvents.cs" type="server" lang="csharp" />
     <script src="Player/CharacterMenu.js" type="client" lang="javascript" />
     <script src="Player/MoneyDisplay.js" type="client" lang="javascript" />
     <script src="LSRP.cs" type="server" lang="csharp" />
     <script src="commands.cs" type="server" lang="csharp" />
-    <script src="Config.cs" type="server" lang="csharp" />
 </meta>

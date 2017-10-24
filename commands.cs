@@ -22,6 +22,13 @@ namespace lsrp_gamemode
          * COMMANDS
          **/
 
+        [Command("myid")]
+        public void cmd_Myid(Client player)
+        {
+            PlayerClass pc = player.getData("data");
+            API.shared.sendChatMessageToPlayer(player, "Moje ID: " + pc.id.ToString());
+        }
+
         [Command("pos")]
         public void cmd_Pos(Client player)
         {
@@ -38,7 +45,11 @@ namespace lsrp_gamemode
         [Command("login", "Użycie: /login [hasło]", SensitiveInfo = true, GreedyArg = true)]
         public void cmd_Login(Client player, string password)
         {
-            // Check login
+            if(player.getData("logged") == true)
+            {
+                API.sendChatMessageToPlayer(player, "Jesteś już zalogowany.");
+                return;
+            }
             if (!Database.loginPlayer(player, password, API))
             {
                 API.sendChatMessageToPlayer(player, "Podałeś błędne hasło!");
@@ -61,6 +72,15 @@ namespace lsrp_gamemode
             foreach (Client p in playerList)
             {
                 API.sendChatMessageToPlayer(p, Config.COLOR_DO, "** " + action + " (( " + player.name + " ))");
+            }
+        }
+        [Command("b", "Użycie: /b [wiadomość]", GreedyArg = true)]
+        public void cmd_b(Client player, string msg)
+        {
+            List<Client> playerList = API.getPlayersInRadiusOfPlayer(10, player);
+            foreach (Client p in playerList)
+            {
+                API.sendChatMessageToPlayer(p, Config.COLOR_B, "(( " + player.getData("globalname") + " [" + player.getData("data").id + "]: " + msg + " ))");
             }
         }
     }

@@ -8,6 +8,7 @@ using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using System.Collections.Generic;
 using lsrp_gamemode.Misc;
+using lsrp_gamemode.Player;
 
 namespace lsrp_gamemode.Player
 {
@@ -24,18 +25,35 @@ namespace lsrp_gamemode.Player
 
         public static Boolean OnPlayerLogin(Client player, double x, double y, double z, bool crash)
         {
-            player.setSkin(player.getData("pSkin"));
-            player.name = player.getData("name");
-            player.nametag = player.getData("name");
-            Utils.SetMoney(player, player.getData("pCash"));
+            PlayerClass p = player.getData("data");
+            player.setSkin(p.skin);
+            player.name = p.name;
+            player.nametag = p.displayName;
+            player.health = p.health;
+            Utils.SetMoney(player, p.cash);
 
             if(crash)
             {
                 API.shared.setEntityPosition(player, new Vector3(x, y, z));
-                API.shared.setEntityDimension(player, player.getData("pVW"));
+                API.shared.setEntityDimension(player, p.vw);
                 Database.UpdateCrash(player, false);
             }
 
+            // Nametag
+            player.nametag = p.displayName.Replace("_", " ") + " (" + p.id + ")";
+
+            // Message (admin previlages)
+            int admin = player.getData("admin");
+            if(admin > 0)
+            {
+                API.shared.sendNotificationToPlayer(player, "~h~Wczytano uprawnienia ~r~administratora", true);
+            }
+            else if(admin < 0)
+            {
+                API.shared.sendNotificationToPlayer(player, "~h~Wczytano uprawnienia ~b~supportera", true);
+            }
+
+            player.setData("logged", true);
             return true;
         }
 

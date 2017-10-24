@@ -15,7 +15,7 @@ namespace lsrp_gamemode
 {
     public class Database : Script
     {
-        public static string myConnectionString = String.Format("SERVER={0};DATABASE={1};UID={2};PASSWORD={3}", Config.DB_HOST,Config.DB_DB,Config.DB_USER,Config.DB_PASS);
+        public static string myConnectionString = String.Format("SERVER={0};DATABASE={1};UID={2};PASSWORD={3}", DBConfig.DB_HOST, DBConfig.DB_DB, DBConfig.DB_USER, DBConfig.DB_PASS);
         public static MySqlConnection connection;
         public static MySqlCommand command;
         public static MySqlDataReader Reader;
@@ -67,11 +67,12 @@ namespace lsrp_gamemode
             command.CommandText = "SELECT * FROM users AS u JOIN characters AS c ON c.owner = u.id WHERE u.username = '" + player.name + "' AND u.hash = '" + Utils.Sha256(password) + "'";
             Reader = command.ExecuteReader();
 
-            int id = 0;
+            int id = 0; int admin = 0;
             Dictionary<int, string> characters = new Dictionary<int, string>();
 
             while (Reader.Read())
             {
+                admin = Reader.GetInt32("admin");
                 id = Reader.GetInt32("id");
                 characters.Add(Reader.GetInt32("cid"), Reader.GetString("name"));
             }
@@ -81,6 +82,9 @@ namespace lsrp_gamemode
 
             if (id > 0)
             {
+                player.setData("gid", id);
+                player.setData("admin", admin);
+                player.setData("globalname", player.name);
                 Login.ShowCharacters(player, characters, API);
                 return true;
             }
@@ -117,13 +121,14 @@ namespace lsrp_gamemode
         /// <returns></returns>
         public static Boolean SavePlayer(Client player, Boolean save_pos = false)
         {
-            command.CommandText = "UPDATE characters SET money = " + player.getData("pCash") + ", health = " + player.health;
+            PlayerClass p = player.getData("data");
+            command.CommandText = "UPDATE characters SET money = " + p.cash + ", health = " + p.health;
             if(save_pos)
             {
                 Vector3 pos = player.position;
-                command.CommandText += ", crash = 1, posx = '" + pos.X + "', posy = '" + pos.Y + "', posz = '" + pos.Z + "', dimension = " + player.getData("pVW");
+                command.CommandText += ", crash = 1, posx = '" + pos.X + "', posy = '" + pos.Y + "', posz = '" + pos.Z + "', dimension = " + p.vw;
             }
-            command.CommandText += " WHERE cid = " + player.getData("pUID");
+            command.CommandText += " WHERE cid = " + p.uid;
 
             try
             {
@@ -146,12 +151,17 @@ namespace lsrp_gamemode
             bool is_crash = false;
             while(Reader.Read())
             {
-                player.setData("pUID", Reader.GetInt32("cid"));
-                player.setData("pSkin", (PedHash) Reader.GetInt32("skin"));
-                player.setData("pName", Reader.GetString("name"));
-                player.setData("pDisplayName", Reader.GetString("name"));
-                player.setData("pCash", Reader.GetInt32("money"));
-                player.setData("pVW", Reader.GetInt32("dimension"));
+                PlayerClass p = new PlayerClass();
+                p.uid = Reader.GetInt32("cid");
+                p.skin = (PedHash)Reader.GetInt32("skin");
+                p.name = Reader.GetString("name");
+                p.displayName = Reader.GetString("name");
+                p.cash = Reader.GetInt32("money");
+                p.vw = Reader.GetInt32("dimension");
+                p.health = Reader.GetInt32("health");
+                p.id = PlayerClass.GetFreeID();
+
+                player.setData("data", p);
 
                 posX = Reader.GetDouble("posx");
                 posY = Reader.GetDouble("posy");

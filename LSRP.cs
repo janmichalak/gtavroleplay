@@ -30,24 +30,17 @@ namespace lsrp_gamemode
             API.consoleOutput(Utils.Sha256("chuj123"));
 
             // Events
-            API.onPlayerConnected += API_onPlayerConnected;
             API.onServerResourceStart += API_onServerResourceStart;
             API.onClientEventTrigger += ClientEvents.API_OnClientEvent;
+            API.onPlayerConnected += PlayerClass.OnPlayerConnected;
+            API.onPlayerHealthChange += PlayerClass.OnPlayerHealthChangeHandler;
+            API.onPlayerDisconnected += PlayerClass.OnPlayerDisconnectedHandler;
         }
 
         // OnServerResourceStart
         private void API_onServerResourceStart(string resource)
         {
             
-        }
-
-        // OnPlayerConnected
-        private void API_onPlayerConnected(Client player)
-        {
-            API.setEntityDimension(player, -1);
-            API.setEntityInvincible(player, true);
-            API.freezePlayer(player, true);
-            API.sendChatMessageToPlayer(player, "Wpisz /login [hasło] żeby się zalogować!");
         }
     }
 }
