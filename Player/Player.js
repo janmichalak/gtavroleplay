@@ -31,7 +31,7 @@ API.onServerEventTrigger.connect(function (name, args) {
 		for(i in characters) {
 			if(characters[i]) {
 				serverCharacters.push({id: i, name: characters[i]});
-				var item = API.createMenuItem(characters[i], "");
+				var item = API.createMenuItem(characters[i], "ID: " + i);
 				menu.AddItem(item);
 			}
 		}
@@ -77,3 +77,11 @@ API.onServerEventTrigger.connect(function (name, args) {
         menu.Visible = true;
     }
 });
+
+// Key press to start engine
+API.onKeyUp.connect(function (sender, e) {
+	if (e.KeyCode === Keys.U) {
+		// TODO: warunek czy jest w aucie
+		API.triggerServerEvent("start_stop_engine");
+	}
+})

@@ -9,6 +9,7 @@ using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
+using lsrp_gamemode.Vehicles;
 
 namespace lsrp_gamemode.Player
 {
@@ -27,6 +28,11 @@ namespace lsrp_gamemode.Player
                     Database.GetCharacterData(player, Int32.Parse(char_id));
                     API.shared.consoleOutput("Gracz " + char_name.ToString() + " (UID: " + char_id.ToString() + ") zalogował się.");
                 }
+            }
+
+            if(eventName == "start_stop_engine") // START STOP ENGINE
+            {
+                VehicleClass.StartStopEngine(player);
             }
         }
     }

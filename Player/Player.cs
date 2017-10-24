@@ -37,6 +37,7 @@ namespace lsrp_gamemode.Player
             player.setData("data", new PlayerClass());
         }
 
+        #region Player ID System
         public static Client GetPlayerById(int id)
         {
             foreach(var p in API.shared.getAllPlayers())
@@ -67,6 +68,7 @@ namespace lsrp_gamemode.Player
             }
             return -1;
         }
+        #endregion
 
         public static void OnPlayerConnected(Client player)
         {

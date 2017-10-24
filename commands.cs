@@ -9,6 +9,7 @@ using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using lsrp_gamemode.Player;
+using lsrp_gamemode.Vehicles;
 
 namespace lsrp_gamemode
 {
@@ -42,6 +43,12 @@ namespace lsrp_gamemode
             Login.LSRP_DisconnectPlayer(player, true);
         }
 
+        [Command("silnik")]
+        public void cmd_Silnik(Client player)
+        {
+            VehicleClass.StartStopEngine(player);
+        }
+
         [Command("login", "Użycie: /login [hasło]", SensitiveInfo = true, GreedyArg = true)]
         public void cmd_Login(Client player, string password)
         {
@@ -63,7 +70,7 @@ namespace lsrp_gamemode
             List<Client> playerList = API.getPlayersInRadiusOfPlayer(10, player);
             foreach (Client p in playerList)
             {
-                API.sendChatMessageToPlayer(p, Config.COLOR_ME, "** " + player.name + " " + action);
+                API.sendChatMessageToPlayer(p, Config.COLOR_ME, "** " + player.getData("data").displayName + " " + action);
             }
         }
 
@@ -73,7 +80,7 @@ namespace lsrp_gamemode
             List<Client> playerList = API.getPlayersInRadiusOfPlayer(10, player);
             foreach (Client p in playerList)
             {
-                API.sendChatMessageToPlayer(p, Config.COLOR_DO, "** " + action + " (( " + player.name + " ))");
+                API.sendChatMessageToPlayer(p, Config.COLOR_DO, "** " + action + " (( " + player.getData("data").displayName + " ))");
             }
         }
 
