@@ -10,6 +10,7 @@ using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using lsrp_gamemode.Misc;
 using lsrp_gamemode.Player;
+using lsrp_gamemode.Vehicles;
 
 namespace lsrp_gamemode
 {
@@ -37,6 +38,9 @@ namespace lsrp_gamemode
             API.onPlayerDisconnected += PlayerClass.OnPlayerDisconnectedHandler;
             API.onChatMessage += PlayerClass.OnChatMessageHandler;
             API.onChatCommand += PlayerClass.OnChatCommandHandler;
+
+            // Loads
+            VehicleClass.LoadVehicles();
         }
 
         // OnServerResourceStart
