@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using lsrp_gamemode.Misc;
 
 namespace lsrp_gamemode.Player
 {
@@ -104,6 +105,21 @@ namespace lsrp_gamemode.Player
         public static void OnPlayerDisconnectedHandler(Client player, string reason)
         {
             API.shared.consoleOutput(player.name + " has left the server. (" + reason + ")");
+        }
+
+        public static void OnChatMessageHandler(Client player, string message, CancelEventArgs e)
+        {
+            // Roleplay Chat
+            Utils.ChatMethod(player, 10, message, Config.COLOR_CHAT1, Config.COLOR_CHAT2, Config.COLOR_CHAT3, Config.COLOR_CHAT4);
+            e.Cancel = true;
+        }
+
+        public static void OnChatCommandHandler(Client player, string command, CancelEventArgs e)
+        {
+            if(!command.Contains("/login") && player.getData("logged") == false)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

@@ -155,7 +155,7 @@ namespace lsrp_gamemode
                 p.uid = Reader.GetInt32("cid");
                 p.skin = (PedHash)Reader.GetInt32("skin");
                 p.name = Reader.GetString("name");
-                p.displayName = Reader.GetString("name");
+                p.displayName = Reader.GetString("name").Replace("_", " ");
                 p.cash = Reader.GetInt32("money");
                 p.vw = Reader.GetInt32("dimension");
                 p.health = Reader.GetInt32("health");

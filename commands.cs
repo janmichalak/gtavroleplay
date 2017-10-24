@@ -56,6 +56,7 @@ namespace lsrp_gamemode
                 return;
             }
         }
+
         [Command("me", "Użycie: /me [akcja]", GreedyArg = true)]
         public void cmd_me(Client player, string action)
         {
@@ -65,6 +66,7 @@ namespace lsrp_gamemode
                 API.sendChatMessageToPlayer(p, Config.COLOR_ME, "** " + player.name + " " + action);
             }
         }
+
         [Command("do", "Użycie: /do [akcja]", GreedyArg = true)]
         public void cmd_do(Client player, string action)
         {
@@ -74,6 +76,7 @@ namespace lsrp_gamemode
                 API.sendChatMessageToPlayer(p, Config.COLOR_DO, "** " + action + " (( " + player.name + " ))");
             }
         }
+
         [Command("b", "Użycie: /b [wiadomość]", GreedyArg = true)]
         public void cmd_b(Client player, string msg)
         {
@@ -83,13 +86,15 @@ namespace lsrp_gamemode
                 API.sendChatMessageToPlayer(p, Config.COLOR_B, "(( " + player.getData("globalname") + " [" + player.getData("data").id + "]: " + msg + " ))");
             }
         }
+
         [Command("w", "Użycie: /w [ID] [wiadomość]", GreedyArg = true)]
         public void cmd_w(Client player, int id, string msg)
         {
-            if (PlayerClass.GetPlayerById(id) != null && PlayerClass.GetPlayerID(player)==id)
+            Client target = PlayerClass.GetPlayerById(id);
+            if (target != null && PlayerClass.GetPlayerID(player) == id)
             {
-                API.sendChatMessageToPlayer(player, "~#ffc973~", "(( " + PlayerClass.GetPlayerById(id).getData("globalname") + " [" + PlayerClass.GetPlayerID(PlayerClass.GetPlayerById(id)) + "]: " + msg + " ))");
-                API.sendChatMessageToPlayer(PlayerClass.GetPlayerById(id), "~#fdae33~", "(( " + player.getData("globalname") + " [" + PlayerClass.GetPlayerID(player) + "]: " + msg + " ))");
+                API.sendChatMessageToPlayer(player, "~#ffc973~", "(( " + target.getData("globalname") + " [" + PlayerClass.GetPlayerID(target.getData("data").id) + "]: " + msg + " ))");
+                API.sendChatMessageToPlayer(target, "~#fdae33~", "(( " + player.getData("globalname") + " [" + PlayerClass.GetPlayerID(player) + "]: " + msg + " ))");
             }
         }
     }

@@ -35,6 +35,8 @@ namespace lsrp_gamemode
             API.onPlayerConnected += PlayerClass.OnPlayerConnected;
             API.onPlayerHealthChange += PlayerClass.OnPlayerHealthChangeHandler;
             API.onPlayerDisconnected += PlayerClass.OnPlayerDisconnectedHandler;
+            API.onChatMessage += PlayerClass.OnChatMessageHandler;
+            API.onChatCommand += PlayerClass.OnChatCommandHandler;
         }
 
         // OnServerResourceStart
