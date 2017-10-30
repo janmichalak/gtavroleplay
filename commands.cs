@@ -23,11 +23,37 @@ namespace lsrp_gamemode
          * COMMANDS
          **/
 
+        [Command("v", "Użycie: /v [ lista | zamknij ]", GreedyArg = true)]
+        public void cmd_V(Client player, string input)
+        {
+            string[] param = input.Split(null);
+
+            if(param[0] == "lista")
+            {
+
+            }
+        }
+
         [Command("myid")]
         public void cmd_Myid(Client player)
         {
             PlayerClass pc = player.getData("data");
             API.shared.sendChatMessageToPlayer(player, "Moje ID: " + pc.id.ToString());
+        }
+
+        [Command("dl")]
+        public void cmd_Dl(Client player)
+        {
+            bool dl = player.getData("dl");
+            if(dl == true)
+            {
+                API.triggerClientEvent(player, "toggle_dl", false);
+            }
+            else
+            {
+                API.triggerClientEvent(player, "toggle_dl", true);
+            }
+            player.setData("dl", !dl);
         }
 
         [Command("pos")]
