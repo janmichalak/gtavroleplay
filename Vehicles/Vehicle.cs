@@ -19,6 +19,9 @@ namespace lsrp_gamemode.Vehicles
         public int color1 = 0;
         public int color2 = 0;
 
+        public int owner = 0;
+        public int ownertype = Config.VEHICLE_OWNER_NONE;
+
         public VehicleHash model = 0;
         #endregion
 
@@ -43,6 +46,8 @@ namespace lsrp_gamemode.Vehicles
             vc.model = model;
             vc.color1 = col1;
             vc.color2 = col2;
+            vc.ownertype = Config.VEHICLE_OWNER_NONE;
+            vc.owner = 0;
 
             // Insert to SQL
             Database.command.CommandText = "INSERT INTO vehicles (veh_model, veh_posx, veh_posy, veh_posz, veh_rotx, veh_roty, veh_rotz, veh_col1, veh_col2, veh_vw) ";
@@ -54,7 +59,9 @@ namespace lsrp_gamemode.Vehicles
             vc.uid = (int)Database.command.LastInsertedId;
             API.shared.consoleOutput(String.Format("Utworzono pojazd marki {0} ID:{1}, UID:{2}", model, vc.id, vc.uid));
 
+            API.shared.setVehicleNumberPlate(vehicle, String.Format("LS {0}", vc.uid));
             API.shared.setEntityData(vehicle, "data", vc);
+            API.shared.setEntitySyncedData(vehicle, "id", vc.id);
             return vehicle;
         }
 
@@ -64,7 +71,7 @@ namespace lsrp_gamemode.Vehicles
         public static void LoadVehicles()
         {
             API.shared.consoleOutput("[load] Rozpoczynam wczytywanie pojazdów...");
-            Database.command.CommandText = "SELECT * FROM vehicles WHERE veh_ownertype != 1";
+            Database.command.CommandText = String.Format("SELECT * FROM vehicles WHERE veh_ownertype != {0}", Config.VEHICLE_OWNER_PLAYER);
             Database.Reader = Database.command.ExecuteReader();
 
             var r = Database.Reader; int loaded = 0;
@@ -81,12 +88,29 @@ namespace lsrp_gamemode.Vehicles
                 vc.model = (VehicleHash)r.GetInt32("veh_model");
                 vc.color1 = r.GetInt32("veh_col1");
                 vc.color2 = r.GetInt32("veh_col2");
+                vc.ownertype = r.GetInt32("veh_ownertype");
+                vc.owner = r.GetInt32("veh_owner");
+
+                API.shared.setVehicleNumberPlate(vehicle, String.Format("LS {0}", vc.uid));
                 API.shared.setEntityData(vehicle, "data", vc);
+                API.shared.setEntitySyncedData(vehicle, "id", vc.id);
                 loaded += 1;
             }
 
             Database.Reader.Close();
             API.shared.consoleOutput("[load] Załadowano " + loaded + " pojazdów.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="veh_uid"></param>
+        /// <param name="ownertype"></param>
+        /// <param name="owner"></param>
+        public static void UpdateVehicleOwner(int veh_uid, int ownertype, int owner)
+        {
+            Database.command.CommandText = String.Format("UPDATE vehicles SET veh_owner = {0}, veh_ownertype = {1} WHERE veh_id = {2}", owner, ownertype, veh_uid);
+            Database.command.ExecuteNonQuery();
         }
         #endregion
 
@@ -118,6 +142,11 @@ namespace lsrp_gamemode.Vehicles
         }
 
         #region Vehicle ID System
+        /// <summary>
+        /// Return NetHandle vehicle or netHandle.IsNull
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static NetHandle GetVehicleById(int id)
         {
             foreach (var v in API.shared.getAllVehicles())

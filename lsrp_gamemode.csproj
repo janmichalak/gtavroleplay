@@ -72,38 +72,38 @@
   <ItemGroup>
     <Content Include="meta.xml" />
     <Content Include="Player\Player.js" />
-    <Content Include="types-gt-mp\Declarations.d.ts" />
-    <Content Include="types-gt-mp\Definitions\Declarations.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Contracts.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.GUI.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Javascript.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Javascript.ScriptContext.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Models.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Sound.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Sync.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Shared.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Shared.Math.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GTA.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GTA.Math.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GTA.Native.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GTA.NaturalMotion.d.ts" />
-    <Content Include="types-gt-mp\Definitions\GTA.UI.d.ts" />
-    <Content Include="types-gt-mp\Definitions\index.d.ts" />
-    <Content Include="types-gt-mp\Definitions\Microsoft.ClearScript.d.ts" />
-    <Content Include="types-gt-mp\Definitions\NativeUI.d.ts" />
-    <Content Include="types-gt-mp\Definitions\NativeUI.UIMenu.d.ts" />
-    <Content Include="types-gt-mp\Definitions\NativeUI.UIMenuDynamicListItem.d.ts" />
-    <Content Include="types-gt-mp\Definitions\NativeUI.UIMenuItem.d.ts" />
-    <Content Include="types-gt-mp\Definitions\NativeUI.UIResText.d.ts" />
-    <Content Include="types-gt-mp\Definitions\System.Collections.d.ts" />
-    <Content Include="types-gt-mp\Definitions\System.Collections.Generic.d.ts" />
-    <Content Include="types-gt-mp\Definitions\System.d.ts" />
-    <Content Include="types-gt-mp\Definitions\System.Drawing.d.ts" />
-    <Content Include="types-gt-mp\Definitions\System.Windows.Forms.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\Declarations.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Contracts.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.GUI.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Javascript.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Javascript.ScriptContext.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Models.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Sound.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Sync.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Shared.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Shared.Math.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GTA.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GTA.Math.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GTA.Native.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GTA.NaturalMotion.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\GTA.UI.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\index.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\Microsoft.ClearScript.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\NativeUI.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\NativeUI.UIMenu.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\NativeUI.UIMenuDynamicListItem.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\NativeUI.UIMenuItem.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\NativeUI.UIResText.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\System.Collections.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\System.Collections.Generic.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\System.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\System.Drawing.d.ts" />
+    <TypeScriptCompile Include="types-gt-mp\Definitions\System.Windows.Forms.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="tsconfig.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

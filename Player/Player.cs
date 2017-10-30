@@ -34,10 +34,16 @@ namespace lsrp_gamemode.Player
             player.setData("admin", 0);
             player.setData("gid", 0);
             player.setData("logged", false);
+            player.setData("dl", false);
             player.setData("data", new PlayerClass());
         }
 
         #region Player ID System
+        /// <summary>
+        /// Get player by ID (Return Client or null)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static Client GetPlayerById(int id)
         {
             foreach(var p in API.shared.getAllPlayers())
