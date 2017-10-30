@@ -30,7 +30,17 @@ namespace lsrp_gamemode
 
             if(param[0] == "lista")
             {
-
+                Dictionary<int, int> vehicles = VehicleClass.ListPlayerVehicles(player);
+                if(vehicles.Count > 0)
+                {
+                    string json = API.toJson(vehicles);
+                    API.triggerClientEvent(player, "vehicle_select", json);
+                }
+                else
+                {
+                    API.sendNotificationToPlayer(player, "Nie posiadasz żadnego pojazdu.");
+                    return;
+                }
             }
         }
 

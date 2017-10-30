@@ -30,6 +30,31 @@ namespace lsrp_gamemode.Player
                 }
             }
 
+            if (eventName == "vehicle_selected_item")
+            {
+                int vehicle_uid = Int32.Parse(arguments[0].ToString());
+                NetHandle vehicle = VehicleClass.GetVehicleByUid(vehicle_uid);
+
+                if (vehicle.IsNull)
+                {
+                    VehicleClass.LoadVehicle(vehicle_uid);
+                    API.shared.sendChatMessageToPlayer(player, "Pomyślnie zespawnowano pojazd.");
+                }
+                else
+                {
+                    VehicleClass.UnloadVehicle(vehicle);
+                    API.shared.sendChatMessageToPlayer(player, "Pomyślnie odspawnowano pojazd.");
+                }
+
+                API.shared.triggerClientEvent(player, "hide_menu");
+            }
+
+            if(eventName == "vehicle_select_item")
+            {
+                API.shared.triggerClientEvent(player, "hide_menu");
+                API.shared.triggerClientEvent(player, "vehicle_selected");
+            }
+
             if(eventName == "start_stop_engine") // START STOP ENGINE
             {
                 VehicleClass.StartStopEngine(player);

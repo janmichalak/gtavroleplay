@@ -100,6 +100,10 @@ namespace lsrp_gamemode
                         VehicleClass.UpdateVehicleOwner(vc.uid, vc.ownertype, vc.owner);
                         API.sendChatMessageToPlayer(player, String.Format("Pomyślnie przepisano pojazd {0} graczowi {1} [{2}]", API.getVehicleDisplayName(vc.model), pc.displayName, pc.id));
                     }
+                    if(towho == "grupa")
+                    {
+                        /// TODO
+                    }
                 }
                 if(param[0] == "debug")
                 {

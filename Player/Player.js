@@ -1,7 +1,11 @@
 /// <reference path="../types-gt-mp/Definitions/index.d.ts" />
 var menu = null; // handler
+var vMenu = null;
 var dl = false;
 var dlArray = [];
+
+var selected_car_name = '';
+var selected_car_uid = 0;
 
 API.onServerEventTrigger.connect(function (name, args) {
 	if(name == "hide_menu")
@@ -35,6 +39,50 @@ API.onServerEventTrigger.connect(function (name, args) {
         }
     }
 
+    if (name == "vehicle_selected")
+    {
+        menu = null;
+        menu = API.createMenu("", selected_car_name, 0, 0, 6, false);
+        menu.AddItem(API.createMenuItem("1. Spawn/Unspawn pojazdu", ""));
+        menu.AddItem(API.createMenuItem("2. Sprzedaj pojazd", ""));
+        menu.AddItem(API.createMenuItem("3. Informacje o pojezdzie", ""));
+
+        menu.OnItemSelect.connect(function (sender, item, index) {
+            API.triggerServerEvent("vehicle_selected_item", selected_car_uid);
+        });
+
+        menu.Visible = true;
+    }
+
+    if (name == "vehicle_select")
+    {
+        menu = null;
+        menu = API.createMenu("Moje pojazdy", "Wybierz pojazd", 0, 0, 6);
+        var vehicles = JSON.parse(args[0]);
+        var serverVehicles = [];
+
+        selected_car_name = '';
+        selected_car_uid = 0;
+
+        for (var i in vehicles) {
+            if (vehicles[i]) {
+                serverVehicles.push({ id: i, name: vehicles[i] });
+                var item = API.createMenuItem(API.getVehicleDisplayName(vehicles[i]), "ID: " + i);
+                menu.AddItem(item);
+            }
+        }
+
+        
+        menu.OnItemSelect.connect(function (sender, item, index) {
+            selected_car_name = API.getVehicleDisplayName(serverVehicles[index].name);
+            selected_car_uid = serverVehicles[index].id;
+            API.triggerServerEvent("vehicle_select_item");
+            menu.Visible = false;
+        });
+
+        menu.Visible = true;
+    }
+
 	/**
 	 *	CHARACTER MENU
 	 */
@@ -47,8 +95,8 @@ API.onServerEventTrigger.connect(function (name, args) {
 
         menu = null;
         if (banner == null)
-            menu = API.createMenu(subtitle, 0, 0, 6);
-        else menu = API.createMenu(banner, subtitle, 0, 0, 6);
+            menu = API.createMenu("Wybierz postaæ", 0, 0, 6);
+        else menu = API.createMenu("Moje postacie", "Wybierz postac", 0, 0, 6);
 
         if (noExit) {
             menu.ResetKey(menuControl.Back);
