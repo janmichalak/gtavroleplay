@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using lsrp_gamemode.Player;
 
 namespace lsrp_gamemode.Vehicles
 {
@@ -66,6 +67,51 @@ namespace lsrp_gamemode.Vehicles
         }
 
         /// <summary>
+        /// Unload vehicle
+        /// </summary>
+        /// <param name="vehicle"></param>
+        public static void UnloadVehicle(NetHandle vehicle)
+        {
+            // DB SAVE
+            API.shared.deleteEntity(vehicle);
+        }
+
+        /// <summary>
+        /// Load vehicle by uid
+        /// </summary>
+        /// <param name="uid"></param>
+        public static void LoadVehicle(int uid)
+        {
+            API.shared.consoleOutput("[load] Wczytuję pojazd uid: " + uid);
+            Database.command.CommandText = String.Format("SELECT * FROM vehicles WHERE veh_id = {0}", uid);
+            Database.Reader = Database.command.ExecuteReader();
+
+            var r = Database.Reader;
+            while(r.Read())
+            {
+                Vector3 pos = new Vector3(r.GetFloat("veh_posx"), r.GetFloat("veh_posy"), r.GetFloat("veh_posz"));
+                Vector3 rot = new Vector3(r.GetFloat("veh_rotx"), r.GetFloat("veh_roty"), r.GetFloat("veh_rotz"));
+                NetHandle vehicle = API.shared.createVehicle(r.GetInt32("veh_model"), pos, rot, r.GetInt32("veh_col1"), r.GetInt32("veh_col2"), r.GetInt32("veh_vw"));
+                API.shared.setVehicleEngineStatus(vehicle, false);
+
+                VehicleClass vc = new VehicleClass();
+                vc.id = GetFreeID();
+                vc.uid = r.GetInt32("veh_id");
+                vc.model = (VehicleHash)r.GetInt32("veh_model");
+                vc.color1 = r.GetInt32("veh_col1");
+                vc.color2 = r.GetInt32("veh_col2");
+                vc.ownertype = r.GetInt32("veh_ownertype");
+                vc.owner = r.GetInt32("veh_owner");
+
+                API.shared.setVehicleNumberPlate(vehicle, String.Format("LS {0}", vc.uid));
+                API.shared.setEntityData(vehicle, "data", vc);
+                API.shared.setEntitySyncedData(vehicle, "id", vc.id);
+            }
+
+            Database.Reader.Close();
+        }
+
+        /// <summary>
         /// Load all vehicles on start
         /// </summary>
         public static void LoadVehicles()
@@ -111,6 +157,22 @@ namespace lsrp_gamemode.Vehicles
         {
             Database.command.CommandText = String.Format("UPDATE vehicles SET veh_owner = {0}, veh_ownertype = {1} WHERE veh_id = {2}", owner, ownertype, veh_uid);
             Database.command.ExecuteNonQuery();
+        }
+
+        public static Dictionary<int, int> ListPlayerVehicles(Client player)
+        {
+            PlayerClass pc = player.getData("data");
+            Database.command.CommandText = String.Format("SELECT * FROM vehicles WHERE veh_ownertype = {0} AND veh_owner = {1}", Config.VEHICLE_OWNER_PLAYER, pc.uid);
+            Database.Reader = Database.command.ExecuteReader();
+
+            var r = Database.Reader;
+            Dictionary<int, int> vehicles = new Dictionary<int, int>();
+            while (r.Read())
+            {
+                vehicles.Add(r.GetInt32("veh_id"), r.GetInt32("veh_model"));
+            }
+            Database.Reader.Close();
+            return vehicles;
         }
         #endregion
 
@@ -159,6 +221,23 @@ namespace lsrp_gamemode.Vehicles
                         return v;
                     }
                 }
+                catch { }
+            }
+            return new NetHandle();
+        }
+
+        public static NetHandle GetVehicleByUid(int uid)
+        {
+            foreach (var v in API.shared.getAllVehicles())
+            {
+                try
+                {
+                    VehicleClass vc = API.shared.getEntityData(API.shared.getEntityFromHandle<Vehicle>(v), "data");
+                    if(vc.uid == uid)
+                    {
+                        return v;
+                    }
+                } 
                 catch { }
             }
             return new NetHandle();
