@@ -10,6 +10,10 @@
     <script src="Config/DBConfig.cs" type="server" lang="csharp" />
 	  <script src="Database/DB.cs" type="server" lang="csharp" />
     <script src="Misc/Utils.cs" type="server" lang="csharp" />
+  
+    <!-- GTA:O Character -->
+    <script src="Player/GTAOCharacter/gtao_api.cs" type="server" lang="csharp" />
+    <script src="Player/GTAOCharacter/gtao_handler.js" type="client" lang="javascript" />
 
     <!-- Player -->
     <script src="Player/Login.cs" type="server" lang="csharp" />

@@ -15,6 +15,15 @@ namespace lsrp_gamemode
 {
     public class AdminCommands : Script
     {
+        [Command("debugpistol")]
+        public void cmd_Debugpistol(Client player)
+        {
+            if (player.getData("admin") > 0)
+            {
+                API.givePlayerWeapon(player, WeaponHash.Pistol, 200, false, false);
+            }
+        }
+
         [Command("setvw", "Użycie: /setvw [ID Gracza] [ID świata]", GreedyArg = true)]
         public void cmd_Setvw(Client player, string input)
         {
@@ -39,7 +48,7 @@ namespace lsrp_gamemode
             }
         }
 
-        [Command("av", "Użycie: /av [ stworz | usun | debug | przypisz ]", GreedyArg = true)]
+        [Command("av", "Użycie: /av [ stworz | usun | debug | przypisz | fix | color ]", GreedyArg = true)]
         public void cmd_Av(Client player, string input)
         {
             if (player.getData("admin") > 0)
@@ -68,6 +77,48 @@ namespace lsrp_gamemode
 
                     NetHandle vehicle = VehicleClass.CreateVehicle(model, new_pos, new Vector3(0, 0, 0), col1, col2, player.dimension);
                     API.sendNotificationToPlayer(player, "Pomyślnie utworzono pojazd marki " + param[1]);
+                }
+                if (param[0] == "color")    // av color IDveh IDC1 IDC2
+                {
+                    if(param.Length != 4)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /av color [ID wozu] [kolor1] [kolor2]");
+                        return;
+                    }
+
+                    int vehicle_id = Convert.ToInt32(param[1]);
+                    int color1 = Convert.ToInt32(param[2]);
+                    int color2 = Convert.ToInt32(param[3]);
+                    NetHandle vehicle = VehicleClass.GetVehicleById(vehicle_id);
+
+                    if(vehicle.IsNull)
+                    {
+                        API.sendNotificationToPlayer(player, "Nie znaleziono pojazdu o takim ID.");
+                        return;
+                    }
+
+                    VehicleClass.UpdateVehicleMainColors(vehicle, color1, color2);
+                    API.sendNotificationToPlayer(player, "Pomyślnie zmieniono kolory pojazdu.");
+                }
+                if(param[0] == "fix")    // av fix ID
+                {
+                    if(param.Length != 2)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /av fix [ID pojazdu]");
+                        return;
+                    }
+
+                    int vehicle_id = Int32.Parse(param[1]);
+                    NetHandle vehicle = VehicleClass.GetVehicleById(vehicle_id);
+
+                    if(vehicle.IsNull)
+                    {
+                        API.sendNotificationToPlayer(player, "Nie znaleziono pojazdu o takim ID.");
+                        return;
+                    }
+
+                    API.repairVehicle(vehicle);
+                    API.sendNotificationToPlayer(player, "Pomyślnie naprawiono pojazd.");
                 }
                 if(param[0] == "przypisz")  // av przypisz gracz 1 1
                 {
