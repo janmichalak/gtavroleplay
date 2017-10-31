@@ -32,6 +32,11 @@ namespace lsrp_gamemode.Player
             player.health = p.health;
             Utils.SetMoney(player, p.cash);
 
+            // GTAO: Character
+            GTAOnlineCharacter.initializePedFace(player);
+            GTAOnlineCharacter.initializeMyClothes(player);
+            GTAOnlineCharacter.updatePlayerFace(player);
+
             if(crash)
             {
                 API.shared.setEntityPosition(player, new Vector3(x, y, z));

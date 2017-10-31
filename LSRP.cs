@@ -28,8 +28,6 @@ namespace lsrp_gamemode
             // MySQL init
             db.Connect();
 
-            API.consoleOutput(Utils.Sha256("chuj123"));
-
             // Events
             API.onServerResourceStart += API_onServerResourceStart;
             API.onClientEventTrigger += ClientEvents.API_OnClientEvent;
@@ -38,6 +36,9 @@ namespace lsrp_gamemode
             API.onPlayerDisconnected += PlayerClass.OnPlayerDisconnectedHandler;
             API.onChatMessage += PlayerClass.OnChatMessageHandler;
             API.onChatCommand += PlayerClass.OnChatCommandHandler;
+
+            // Set world time
+            API.setTime(20, 0);
 
             // Loads
             VehicleClass.LoadVehicles();

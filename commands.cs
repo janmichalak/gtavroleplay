@@ -23,7 +23,7 @@ namespace lsrp_gamemode
          * COMMANDS
          **/
 
-        [Command("v", "Użycie: /v [ lista | zamknij ]", GreedyArg = true)]
+        [Command("v", "Użycie: /v [ lista | zamknij | zaparkuj ]", GreedyArg = true)]
         public void cmd_V(Client player, string input)
         {
             string[] param = input.Split(null);
@@ -41,6 +41,21 @@ namespace lsrp_gamemode
                     API.sendNotificationToPlayer(player, "Nie posiadasz żadnego pojazdu.");
                     return;
                 }
+            }
+            if(param[0] == "zaparkuj")
+            {
+                if(!API.isPlayerInAnyVehicle(player))
+                {
+                    API.sendNotificationToPlayer(player, "Nie znajdujesz się w żadnym pojeździe.");
+                    return;
+                }
+
+                NetHandle vehicle = API.getPlayerVehicle(player);
+                VehicleClass vc = API.getEntityData(vehicle, "data");
+
+                // funkcja do sprawdzenia czy gracz ma permy do ustawiania takich rzeczy
+                VehicleClass.ParkVehicle(vehicle);
+                API.sendNotificationToPlayer(player, "Pomyślnie zaparkowano pojazd.");
             }
         }
 
