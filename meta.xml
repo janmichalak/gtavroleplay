@@ -14,6 +14,11 @@
     <!-- GTA:O Character -->
     <script src="Player/GTAOCharacter/gtao_api.cs" type="server" lang="csharp" />
     <script src="Player/GTAOCharacter/gtao_handler.js" type="client" lang="javascript" />
+  
+    <!-- GTA:O Creator -->
+    <!-- LATER -->
+    <!--<script src="Player/GTAOCreator/Creator.cs" type="server" lang="csharp" />
+    <script src="Player/GTAOCreator/Creator.js" type="client" lang="javascript" />-->
 
     <!-- Player -->
     <script src="Player/Login.cs" type="server" lang="csharp" />
@@ -22,10 +27,21 @@
     <script src="Player/Player.js" type="client" lang="javascript" />
     <script src="Player/MoneyDisplay.js" type="client" lang="javascript" />
   
+    <!-- Main files -->
     <script src="LSRP.cs" type="server" lang="csharp" />
     <script src="commands.cs" type="server" lang="csharp" />
     <script src="AdminCommands.cs" type="server" lang="csharp" />
 
     <!-- Vehicle -->
     <script src="Vehicles/Vehicle.cs" type="server" lang="csharp" />
+  
+    <!-- Items -->
+    <script src="Items/Item.cs" type="server" lang="csharp" />
+    <script src="Items/ItemManager.cs" type="server" lang="csharp" />
+
+    <!-- Interiors preview -->
+    <script src="Misc/InteriorBrowser/InteriorData.cs" type="server" lang="csharp" />
+    <script src="Misc/InteriorBrowser/Main.cs" type="server" lang="csharp" />
+    <script src="Misc/InteriorBrowser/interiors.js" type="client" lang="javascript" />
+    <assembly ref="Newtonsoft.Json.dll" />
 </meta>

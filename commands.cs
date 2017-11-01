@@ -10,6 +10,7 @@ using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using lsrp_gamemode.Player;
 using lsrp_gamemode.Vehicles;
+using lsrp_gamemode.Items;
 
 namespace lsrp_gamemode
 {
@@ -22,6 +23,32 @@ namespace lsrp_gamemode
         /**
          * COMMANDS
          **/
+
+        [Command("p", "Użycie: /p [ lista | podnies ]", GreedyArg = true)]
+        public void cmd_P(Client player, string input)
+        {
+            string[] param = input.Split(null);
+
+            if(param[0] == "lista")
+            {
+                List<Item> items = ItemManager.GetPlayerItems(player);
+                if(items.Count > 0)
+                {
+                    /*foreach(Item i in items)
+                    {
+                        
+                        API.shared.sendChatMessageToPlayer(player, "Przedmiot: " + i.name + ", uid: " + i.uid);
+                    }*/
+                    var json = API.toJson(items);
+                    API.triggerClientEvent(player, "item_select", json);
+                }
+                else
+                {
+                    API.sendNotificationToPlayer(player, "Nie posiadasz żadnego przedmiotu.");
+                    return;
+                }
+            }
+        }
 
         [Command("v", "Użycie: /v [ lista | zamknij | zaparkuj ]", GreedyArg = true)]
         public void cmd_V(Client player, string input)
@@ -135,12 +162,12 @@ namespace lsrp_gamemode
         }
 
         [Command("me", "Użycie: /me [akcja]", GreedyArg = true)]
-        public void cmd_me(Client player, string action)
+        public static void cmd_me(Client player, string action)
         {
-            List<Client> playerList = API.getPlayersInRadiusOfPlayer(10, player);
+            List<Client> playerList = API.shared.getPlayersInRadiusOfPlayer(10, player);
             foreach (Client p in playerList)
             {
-                API.sendChatMessageToPlayer(p, Config.COLOR_ME, "** " + player.getData("data").displayName + " " + action);
+                API.shared.sendChatMessageToPlayer(p, Config.COLOR_ME, "** " + player.getData("data").displayName + " " + action);
             }
         }
 

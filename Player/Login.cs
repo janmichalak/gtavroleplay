@@ -9,6 +9,7 @@ using GrandTheftMultiplayer.Shared.Math;
 using System.Collections.Generic;
 using lsrp_gamemode.Misc;
 using lsrp_gamemode.Player;
+using lsrp_gamemode.Items;
 
 namespace lsrp_gamemode.Player
 {
@@ -36,6 +37,10 @@ namespace lsrp_gamemode.Player
             GTAOnlineCharacter.initializePedFace(player);
             GTAOnlineCharacter.initializeMyClothes(player);
             GTAOnlineCharacter.updatePlayerFace(player);
+
+            // Items
+            ItemManager.LoadPlayerItems(player);
+            ItemManager.Debug_ListPlayerItems(player);
 
             if(crash)
             {

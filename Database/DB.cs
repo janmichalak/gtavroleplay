@@ -183,8 +183,8 @@ namespace lsrp_gamemode
             player.position = new Vector3(102.5816, -1944.02, 20.80372);
             API.shared.setEntityDimension(player, 0);
 
-            Login.OnPlayerLogin(player, posX, posY, posZ, is_crash);
             Reader.Close();
+            Login.OnPlayerLogin(player, posX, posY, posZ, is_crash);
             return;
         }
     }
