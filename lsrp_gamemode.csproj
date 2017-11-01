@@ -63,6 +63,7 @@
     <Compile Include="Database\DB.cs" />
     <Compile Include="LSRP.cs" />
     <Compile Include="Player\ClientEvents.cs" />
+    <Compile Include="Player\GTAOCharacter\gtao_api.cs" />
     <Compile Include="Player\Login.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,6 +73,7 @@
   <ItemGroup>
     <Content Include="meta.xml" />
     <Content Include="Player\Player.js" />
+    <Content Include="Player\GTAOCharacter\gtao_handler.js" />
     <TypeScriptCompile Include="types-gt-mp\Definitions\Declarations.d.ts" />
     <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Contracts.d.ts" />
     <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.GUI.d.ts" />
