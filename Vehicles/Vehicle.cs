@@ -69,6 +69,19 @@ namespace lsrp_gamemode.Vehicles
         }
 
         /// <summary>
+        /// Delete vehicle
+        /// </summary>
+        /// <param name="vehicle"></param>
+        public static void DeleteVehicle(NetHandle vehicle)
+        {
+            VehicleClass vc = API.shared.getEntityData(vehicle, "data");
+            Database.command.CommandText = String.Format("DELETE FROM vehicles WHERE veh_id = {0}", vc.uid);
+            Database.command.ExecuteNonQuery();
+
+            API.shared.deleteEntity(vehicle);
+        }
+
+        /// <summary>
         /// Unload vehicle
         /// </summary>
         /// <param name="vehicle"></param>
@@ -133,6 +146,7 @@ namespace lsrp_gamemode.Vehicles
                 API.shared.popVehicleTyre(vehicle, 5, (tyre[5] == "1" ? true : false));
                 #endregion
 
+                API.shared.setVehicleLocked(vehicle, true);
                 API.shared.setVehicleHealth(vehicle, r.GetFloat("veh_hp"));
                 API.shared.setVehicleFuelLevel(vehicle, r.GetFloat("veh_fuel"));
                 API.shared.setVehicleOilLevel(vehicle, r.GetFloat("veh_oil"));

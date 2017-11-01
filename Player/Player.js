@@ -7,6 +7,9 @@ var dlArray = [];
 var selected_car_name = '';
 var selected_car_uid = 0;
 
+var selected_item_uid = 0;
+var selected_item_name = '';
+
 API.onServerEventTrigger.connect(function (name, args) {
 	if(name == "hide_menu")
 	{
@@ -49,6 +52,45 @@ API.onServerEventTrigger.connect(function (name, args) {
 
         menu.OnItemSelect.connect(function (sender, item, index) {
             API.triggerServerEvent("vehicle_selected_item", selected_car_uid);
+        });
+
+        menu.Visible = true;
+    }
+
+    if (name == "item_selected") {
+        menu = null;
+        menu = API.createMenu(selected_item_name,
+            "Wybierz akcje", 0, 0, 6);
+        menu.AddItem(API.createColoredItem("1. Uzyj przedmiotu", "Uzywanie przedmiotu, na przyklad wyciagniecie broni lub zjedzenie posilku", "#19d13a", "#0e7f22"));
+        menu.AddItem(API.createMenuItem("2. Odloz przedmiot", ""));
+        menu.AddItem(API.createMenuItem("3. Informacje o przedmiocie", ""));
+
+        menu.OnItemSelect.connect(function (sender, item, index) {
+            API.triggerServerEvent("item_selected_item", selected_item_uid);
+        });
+
+        menu.Visible = true;
+    }
+
+    if (name == "item_select")
+    {
+        menu = null;
+        menu = API.createMenu("Ekwipunek", "Wybierz przedmiot", 0, 0, 6);
+        var items = JSON.parse(args[0]);
+
+        selected_item_name = '';
+        selected_item_uid = 0;
+
+        for (var i in items)
+        {
+            menu.AddItem(API.createMenuItem("#" + items[i].uid + " " + items[i].name, "(" + items[i].value1 + ", " + items[i].value2 + ")"));
+        }
+
+        menu.OnItemSelect.connect(function (sender, item, index) {
+            selected_item_name = items[index].name;
+            selected_item_uid = parseInt(items[index].uid);
+            API.triggerServerEvent("item_select_item");
+            menu.Visible = false;
         });
 
         menu.Visible = true;

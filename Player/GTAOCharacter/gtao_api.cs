@@ -12,13 +12,14 @@ public class GTAOnlineCharacter : Script
         PedHash model = (PedHash)API.shared.getEntityModel(player);
         if (model != PedHash.FreemodeFemale01 && model != PedHash.FreemodeMale01) return;
 
-        API.shared.setPlayerClothes(player, 0, 33, 0);      // face
-        API.shared.setPlayerClothes(player, 2, 10, 0);      // hair
+        API.shared.setPlayerClothes(player, 0, 45, 0);      // face
+        API.shared.setPlayerClothes(player, 2, 4, 0);      // hair
         API.shared.setPlayerClothes(player, 3, 15, 0);      // torso
         API.shared.setPlayerClothes(player, 8, 3, 1);       // undershirt
-        API.shared.setPlayerClothes(player, 4, 15, 0);      // pants
-        API.shared.setPlayerClothes(player, 6, 19, 0);      // shoes
-        API.shared.setPlayerClothes(player, 11, 107, 0);     // top
+        API.shared.setPlayerClothes(player, 4, 75, 0);      // pants (15)
+        API.shared.setPlayerClothes(player, 6, 35, 0);      // shoes (19)
+        API.shared.setPlayerClothes(player, 11, 5, 7);     // top (107)
+        API.shared.setPlayerAccessory(player, 1, 11, 0);     // glasses
 
         API.shared.setEntitySyncedData(player, "GTAO_SHAPE_FIRST_ID", 33);  // twarz id
     }

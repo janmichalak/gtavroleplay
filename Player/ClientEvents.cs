@@ -49,6 +49,22 @@ namespace lsrp_gamemode.Player
                 API.shared.triggerClientEvent(player, "hide_menu");
             }
 
+            if(eventName == "item_selected_item")
+            {
+                int item_uid = Int32.Parse(arguments[0].ToString());
+                if(item_uid > 0)
+                {
+                    Items.Item.Use(player, item_uid);
+                }
+                API.shared.triggerClientEvent(player, "hide_menu");
+            }
+
+            if(eventName == "item_select_item")
+            {
+                API.shared.triggerClientEvent(player, "hide_menu");
+                API.shared.triggerClientEvent(player, "item_selected");
+            }
+
             if(eventName == "vehicle_select_item")
             {
                 API.shared.triggerClientEvent(player, "hide_menu");
