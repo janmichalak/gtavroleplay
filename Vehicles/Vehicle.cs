@@ -266,6 +266,68 @@ namespace lsrp_gamemode.Vehicles
         #endregion
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="radius"></param>
+        /// <returns></returns>
+        public static NetHandle GetNearestVehicle(Vector3 pos, float radius)
+        {
+            float current = radius;
+            NetHandle vehicle = new NetHandle();
+            foreach (var i in API.shared.getAllVehicles())
+            {
+                float distance = API.shared.getEntityPosition(i).DistanceTo(pos);
+                if (distance < current)
+                {
+                    current = distance;
+                    vehicle = i;
+                }
+            }
+
+            return vehicle;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="radius"></param>
+        /// <returns></returns>
+        public static List<NetHandle> GetVehiclesInRadiusOfPos(Vector3 pos, float radius)
+        {
+            List<NetHandle> vehicles = new List<NetHandle>();
+            foreach(var i in API.shared.getAllVehicles())
+            {
+                if(API.shared.getEntityPosition(i).DistanceTo(pos) <= radius)
+                {
+                    vehicles.Add(i);
+                }
+            }
+
+            return vehicles;
+        }
+
+        /// <summary>
+        /// Czy ma uprawnienia do pojazdu
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
+        public static bool IsPlayerHasPermForVehicle(Client player, NetHandle vehicle)
+        {
+            PlayerClass pc = player.getData("data");
+            VehicleClass vc = API.shared.getEntityData(vehicle, "data");
+            if (vc.ownertype == Config.VEHICLE_OWNER_NONE && player.getData("admin") > 0)
+                return true;
+            if (vc.ownertype == Config.VEHICLE_OWNER_PLAYER && (player.getData("admin") > 0 || vc.owner == pc.uid))
+                return true;
+            if (vc.ownertype == Config.VEHICLE_OWNER_GROUP && (player.getData("admin") > 0))
+                return true;
+            return false;
+        }
+
+        /// <summary>
         /// Change engine state
         /// </summary>
         /// <param name="player"></param>
@@ -273,22 +335,16 @@ namespace lsrp_gamemode.Vehicles
         {
             if (API.shared.isPlayerInAnyVehicle(player))
             {
-                bool can = false;
                 NetHandle vehicle = API.shared.getPlayerVehicle(player);
-                if (player.getData("admin") > 0)
+                
+                if(!IsPlayerHasPermForVehicle(player, vehicle))
                 {
-                    can = true;
-                }
-                else
-                {
-
+                    // throw error
+                    return;
                 }
 
-                if (can)
-                {
-                    API.shared.setVehicleEngineStatus(vehicle, !API.shared.getVehicleEngineStatus(vehicle));
-                    API.shared.consoleOutput(String.Format("[debug] Gracz {0} {1} pojazd ID: {2}", player.getData("data").name, (API.shared.getVehicleEngineStatus(vehicle) == true ? "odpala" : "gasi"), GetVehicleID(vehicle)));
-                }
+                API.shared.setVehicleEngineStatus(vehicle, !API.shared.getVehicleEngineStatus(vehicle));
+                API.shared.consoleOutput(String.Format("[debug] Gracz {0} {1} pojazd ID: {2}", player.getData("data").name, (API.shared.getVehicleEngineStatus(vehicle) == true ? "odpala" : "gasi"), GetVehicleID(vehicle)));
             }
         }
 

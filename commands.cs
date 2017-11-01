@@ -42,6 +42,20 @@ namespace lsrp_gamemode
                     return;
                 }
             }
+            if(param[0] == "zamknij" || param[0] == "z")
+            {
+                NetHandle vehicle = VehicleClass.GetNearestVehicle(player.position, 5f);
+
+                if(!VehicleClass.IsPlayerHasPermForVehicle(player, vehicle))
+                {
+                    API.sendNotificationToPlayer(player, "Nie jesteś właścicielem tego pojazdu.");
+                    return;
+                }
+
+                bool lk = !API.getVehicleLocked(vehicle);
+                API.setVehicleLocked(vehicle, lk);
+                API.sendNotificationToPlayer(player, (lk ? "Zamknąłeś" : "Otworzyłeś") + " pojazd!");
+            }
             if(param[0] == "zaparkuj")
             {
                 if(!API.isPlayerInAnyVehicle(player))
@@ -53,7 +67,12 @@ namespace lsrp_gamemode
                 NetHandle vehicle = API.getPlayerVehicle(player);
                 VehicleClass vc = API.getEntityData(vehicle, "data");
 
-                // funkcja do sprawdzenia czy gracz ma permy do ustawiania takich rzeczy
+                if(!VehicleClass.IsPlayerHasPermForVehicle(player, vehicle))
+                {
+                    API.sendNotificationToPlayer(player, "Nie jesteś właścicielem tego pojazdu.");
+                    return;
+                }
+
                 VehicleClass.ParkVehicle(vehicle);
                 API.sendNotificationToPlayer(player, "Pomyślnie zaparkowano pojazd.");
             }

@@ -9,6 +9,9 @@ public class GTAOnlineCharacter : Script
 
     public static void initializeMyClothes(Client player)
     {
+        PedHash model = (PedHash)API.shared.getEntityModel(player);
+        if (model != PedHash.FreemodeFemale01 && model != PedHash.FreemodeMale01) return;
+
         API.shared.setPlayerClothes(player, 0, 33, 0);      // face
         API.shared.setPlayerClothes(player, 2, 10, 0);      // hair
         API.shared.setPlayerClothes(player, 3, 15, 0);      // torso
