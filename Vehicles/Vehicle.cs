@@ -52,8 +52,8 @@ namespace lsrp_gamemode.Vehicles
 
             // Insert to SQL
             Database.command.CommandText = "INSERT INTO vehicles (veh_model, veh_posx, veh_posy, veh_posz, veh_rotx, veh_roty, veh_rotz, veh_col1, veh_col2, veh_vw) ";
-            Database.command.CommandText += String.Format("VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})", 
-                (int)model, pos.X.ToString().Replace(",", "."), pos.Y.ToString().Replace(",", "."), pos.Z.ToString().Replace(",", "."), 
+            Database.command.CommandText += String.Format("VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})",
+                (int)model, pos.X.ToString().Replace(",", "."), pos.Y.ToString().Replace(",", "."), pos.Z.ToString().Replace(",", "."),
                 rot.X.ToString().Replace(",", "."), rot.Y.ToString().Replace(",", "."), rot.Z.ToString().Replace(",", "."), col1, col2, vw);
             Database.command.ExecuteNonQuery();
 
@@ -97,8 +97,8 @@ namespace lsrp_gamemode.Vehicles
             string tyres = String.Format("{0},{1},{2},{3},{4},{5}", tyre_0, tyre_1, tyre_2, tyre_3, tyre_4, tyre_5);
 
             VehicleClass vc = API.shared.getEntityData(vehicle, "data");
-            Database.command.CommandText = String.Format("UPDATE vehicles SET veh_fuel = '{0}', veh_hp = '{1}', veh_oil = '{2}', veh_tyres = '{3}' WHERE veh_id = {4}", 
-                API.shared.getVehicleFuelLevel(vehicle), 
+            Database.command.CommandText = String.Format("UPDATE vehicles SET veh_fuel = '{0}', veh_hp = '{1}', veh_oil = '{2}', veh_tyres = '{3}' WHERE veh_id = {4}",
+                API.shared.getVehicleFuelLevel(vehicle),
                 API.shared.getVehicleHealth(vehicle),
                 API.shared.getVehicleOilLevel(vehicle),
                 tyres,
@@ -118,7 +118,7 @@ namespace lsrp_gamemode.Vehicles
             Database.Reader = Database.command.ExecuteReader();
 
             var r = Database.Reader;
-            while(r.Read())
+            while (r.Read())
             {
                 Vector3 pos = new Vector3(r.GetFloat("veh_posx"), r.GetFloat("veh_posy"), r.GetFloat("veh_posz"));
                 Vector3 rot = new Vector3(r.GetFloat("veh_rotx"), r.GetFloat("veh_roty"), r.GetFloat("veh_rotz"));
@@ -168,7 +168,7 @@ namespace lsrp_gamemode.Vehicles
             Database.Reader = Database.command.ExecuteReader();
 
             var r = Database.Reader; int loaded = 0;
-            while(r.Read())
+            while (r.Read())
             {
                 Vector3 pos = new Vector3(r.GetFloat("veh_posx"), r.GetFloat("veh_posy"), r.GetFloat("veh_posz"));
                 Vector3 rot = new Vector3(r.GetFloat("veh_rotx"), r.GetFloat("veh_roty"), r.GetFloat("veh_rotz"));
@@ -252,9 +252,9 @@ namespace lsrp_gamemode.Vehicles
             Vector3 rot = API.shared.getEntityRotation(vehicle);
             VehicleClass vc = API.shared.getEntityData(vehicle, "data");
 
-            Database.command.CommandText = String.Format("UPDATE vehicles SET veh_posx = '{0}', veh_posy = '{1}', veh_posz = '{2}', veh_rotx = '{3}', veh_roty = '{4}', veh_rotz = '{5}' WHERE veh_id = {6}", 
+            Database.command.CommandText = String.Format("UPDATE vehicles SET veh_posx = '{0}', veh_posy = '{1}', veh_posz = '{2}', veh_rotx = '{3}', veh_roty = '{4}', veh_rotz = '{5}' WHERE veh_id = {6}",
                 pos.X.ToString().Replace(",", "."), pos.Y.ToString().Replace(",", "."), pos.Z.ToString().Replace(",", "."),
-                rot.X.ToString().Replace(",", "."), rot.Y.ToString().Replace(",", "."), rot.Z.ToString().Replace(",", "."), 
+                rot.X.ToString().Replace(",", "."), rot.Y.ToString().Replace(",", "."), rot.Z.ToString().Replace(",", "."),
                 vc.uid);
             Database.command.ExecuteNonQuery();
         }
@@ -311,9 +311,9 @@ namespace lsrp_gamemode.Vehicles
         public static List<NetHandle> GetVehiclesInRadiusOfPos(Vector3 pos, float radius)
         {
             List<NetHandle> vehicles = new List<NetHandle>();
-            foreach(var i in API.shared.getAllVehicles())
+            foreach (var i in API.shared.getAllVehicles())
             {
-                if(API.shared.getEntityPosition(i).DistanceTo(pos) <= radius)
+                if (API.shared.getEntityPosition(i).DistanceTo(pos) <= radius)
                 {
                     vehicles.Add(i);
                 }
@@ -350,8 +350,8 @@ namespace lsrp_gamemode.Vehicles
             if (API.shared.isPlayerInAnyVehicle(player))
             {
                 NetHandle vehicle = API.shared.getPlayerVehicle(player);
-                
-                if(!IsPlayerHasPermForVehicle(player, vehicle))
+
+                if (!IsPlayerHasPermForVehicle(player, vehicle))
                 {
                     // throw error
                     return;
@@ -392,11 +392,11 @@ namespace lsrp_gamemode.Vehicles
                 try
                 {
                     VehicleClass vc = API.shared.getEntityData(API.shared.getEntityFromHandle<Vehicle>(v), "data");
-                    if(vc.uid == uid)
+                    if (vc.uid == uid)
                     {
                         return v;
                     }
-                } 
+                }
                 catch { }
             }
             return new NetHandle();
