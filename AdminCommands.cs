@@ -122,6 +122,27 @@ namespace lsrp_gamemode
                 }
             }
         }
+        [Command("ap", "Użycie: /ap [stworz | usun | nazwa | owner | value1 | value2]", GreedyArg = true)]
+        public void cmd_Ap(Client player, string input)
+        {
+            if(player.getData("admin")>0)
+            {
+                string[] param = input.Split(null);
+                if(param[0]== "stworz") //ap stworz nazwa typ value1 value2 value3
+                {
+                    if(param.Length!=6)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /ap stworz [nazwa] [typ] [value1] [value2] [value3]");
+                        return;
+                    }
+                    // PRAWDPODOBNIE POWINNO BYC TU <LIST> ITEMS Z METODY CreateItem, chuj wie, pewnie sporo zjebalem kocham cie blint <3
+                    PlayerClass pc = player.getData("data");
+                    string name = param[1];
+                    int type = Convert.ToInt32(param[2]), value1 = Convert.ToInt32(param[3]), value2 = Convert.ToInt32(param[4]) , value3 = Convert.ToInt32(param[5]);
+                    Items.Item.CreateItem(player, pc.id, name, type, value1, value2, value3);
+                }
+            }
+        }
 
         [Command("av", "Użycie: /av [ stworz | usun | debug | przypisz | fix | kolor ]", GreedyArg = true)]
         public void cmd_Av(Client player, string input)
