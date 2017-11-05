@@ -144,7 +144,7 @@ namespace lsrp_gamemode
             }
         }
 
-        [Command("av", "Użycie: /av [ stworz | usun | debug | przypisz | fix | kolor ]", GreedyArg = true)]
+        [Command("av", "Użycie: /av [ stworz | usun | debug | przypisz | fix | kolor | goto | gethere | zaparkuj]", GreedyArg = true)]
         public void cmd_Av(Client player, string input)
         {
             if (player.getData("admin") > 0)
@@ -283,9 +283,62 @@ namespace lsrp_gamemode
                         
                     }
                 }
-                if(param[0] == "usun")
+
+                if(param[0] == "goto")
                 {
-                    
+                    if(param.Length!=2)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /av goto [ID]");
+                        return;
+                    }
+                    if (VehicleClass.GetVehicleById(Convert.ToInt32(param[1])).IsNull)
+                    {
+                        API.sendChatMessageToPlayer(player, "Nie ma pojazdu o takim ID.");
+                        return;
+                    }
+                    NetHandle vehicle = VehicleClass.GetVehicleById(Convert.ToInt32(param[1]));
+                    Vector3 new_pos = API.getEntityPosition(vehicle);
+                    new_pos.X += 2;
+                    new_pos.Y += 2;
+                    API.setEntityDimension(player, API.getEntityDimension(vehicle));
+                    API.setEntityPosition(player, new_pos);
+                }
+
+                if(param[0]=="gethere")
+                {
+                    if(param.Length!=2)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /av gethere [ID]");
+                        return;
+                    }
+                    if (VehicleClass.GetVehicleById(Convert.ToInt32(param[1])).IsNull)
+                    {
+                        API.sendChatMessageToPlayer(player, "Nie ma pojazdu o takim ID.");
+                        return;
+                    }
+                    NetHandle vehicle = VehicleClass.GetVehicleById(Convert.ToInt32(param[1]));
+                    Vector3 new_pos = player.position;
+                    new_pos.X += 2;
+                    new_pos.Y += 2;
+                    API.setEntityDimension(vehicle, player.dimension);
+                    API.setEntityPosition(vehicle, new_pos);
+                }
+
+                if(param[0]=="zaparkuj")
+                {
+                    if(param.Length!=2)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /av zaparkuj [ID]");
+                        return;
+                    }
+                    if (VehicleClass.GetVehicleById(Convert.ToInt32(param[1])).IsNull)
+                    {
+                        API.sendChatMessageToPlayer(player, "Nie ma pojazdu o takim ID.");
+                        return;
+                    }
+                    NetHandle vehicle = VehicleClass.GetVehicleById(Convert.ToInt32(param[1]));
+                    VehicleClass.ParkVehicle(vehicle);
+                    API.sendNotificationToPlayer(player, "Przeparkowałeś pojazd o ID: " + param[1]);
                 }
             }
         }

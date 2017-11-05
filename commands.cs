@@ -201,5 +201,10 @@ namespace lsrp_gamemode
                 API.sendChatMessageToPlayer(target, "~#fdae33~", "(( " + player.getData("globalname") + " [" + PlayerClass.GetPlayerID(player) + "]: " + msg + " ))");
             }
         }
+        [Command("getvw")]
+        public void cmd_Getvw(Client player)
+        {
+            API.sendChatMessageToPlayer(player, "Znajdujesz się na VW: " + API.getEntityDimension(player));
+        }
     }
 }

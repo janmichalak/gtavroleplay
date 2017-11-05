@@ -81,8 +81,8 @@ namespace lsrp_gamemode.Items
         public static Item CreateItem(Client player, int owner_id, string name, int type, int value1, int value2, int value3)
         {
             List<Item> ItemList = Item.PlayerItems[player.handle];
-            Database.command.CommandText = "INSERT INTO items (type, owner, name, value1, value2, value3) ";
-            Database.command.CommandText += String.Format("VALUES({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+            Database.command.CommandText = "INSERT INTO items (type, owner, place, name, value1, value2, value3) ";
+            Database.command.CommandText += String.Format("VALUES({0}, {1}, 2, {2}, {3}, {4}, {5}, {6})",
                 type, owner_id, name, value1, value2, value3);
             Database.command.ExecuteNonQuery();
             Item item = new Item();
