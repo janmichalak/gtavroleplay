@@ -8,6 +8,7 @@ namespace lsrp_gamemode
 {
     public class Config
     {
+        public static readonly bool DEBUG_MODE = true;
         // Colors
         public static readonly string COLOR_ME = "~#C2A2DA~";
         public static readonly string COLOR_DO = "~#9A9CCD~";

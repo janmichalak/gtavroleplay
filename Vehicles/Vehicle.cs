@@ -23,6 +23,10 @@ namespace lsrp_gamemode.Vehicles
         public int owner = 0;
         public int ownertype = Config.VEHICLE_OWNER_NONE;
 
+        public string plate;
+
+        public int vw = 0;
+
         public VehicleHash model = 0;
         #endregion
 
@@ -133,7 +137,8 @@ namespace lsrp_gamemode.Vehicles
                 vc.color2 = r.GetInt32("veh_col2");
                 vc.ownertype = r.GetInt32("veh_ownertype");
                 vc.owner = r.GetInt32("veh_owner");
-
+                vc.vw = r.GetInt32("veh_vw");
+                vc.plate = r.GetString("veh_plate");
                 #region VehicleDamage_OnLoad
                 string tyres = r.GetString("veh_tyres");
                 string[] tyre = tyres.Split(',');
@@ -145,14 +150,21 @@ namespace lsrp_gamemode.Vehicles
                 API.shared.popVehicleTyre(vehicle, 4, (tyre[4] == "1" ? true : false));
                 API.shared.popVehicleTyre(vehicle, 5, (tyre[5] == "1" ? true : false));
                 #endregion
-
+                if (String.IsNullOrEmpty(vc.plate) == true)
+                {
+                    API.shared.setVehicleNumberPlate(vehicle, String.Format("LS {0}", vc.uid));
+                }
+                else
+                {
+                    API.shared.setVehicleNumberPlate(vehicle, String.Format("LS {0}", vc.plate));
+                }
                 API.shared.setVehicleLocked(vehicle, true);
                 API.shared.setVehicleHealth(vehicle, r.GetFloat("veh_hp"));
                 API.shared.setVehicleFuelLevel(vehicle, r.GetFloat("veh_fuel"));
                 API.shared.setVehicleOilLevel(vehicle, r.GetFloat("veh_oil"));
-                API.shared.setVehicleNumberPlate(vehicle, String.Format("LS {0}", vc.uid));
                 API.shared.setEntityData(vehicle, "data", vc);
                 API.shared.setEntitySyncedData(vehicle, "id", vc.id);
+                API.shared.setEntityDimension(vehicle, vc.vw);
             }
 
             Database.Reader.Close();
@@ -183,6 +195,8 @@ namespace lsrp_gamemode.Vehicles
                 vc.color2 = r.GetInt32("veh_col2");
                 vc.ownertype = r.GetInt32("veh_ownertype");
                 vc.owner = r.GetInt32("veh_owner");
+                vc.vw = r.GetInt32("veh_vw");
+          
 
                 #region VehicleDamage_OnLoad
                 string tyres = r.GetString("veh_tyres");
@@ -202,6 +216,7 @@ namespace lsrp_gamemode.Vehicles
                 API.shared.setVehicleNumberPlate(vehicle, String.Format("LS {0}", vc.uid));
                 API.shared.setEntityData(vehicle, "data", vc);
                 API.shared.setEntitySyncedData(vehicle, "id", vc.id);
+                API.shared.setEntityDimension(vehicle, vc.vw);
                 loaded += 1;
             }
 
@@ -251,11 +266,10 @@ namespace lsrp_gamemode.Vehicles
             Vector3 pos = API.shared.getEntityPosition(vehicle);
             Vector3 rot = API.shared.getEntityRotation(vehicle);
             VehicleClass vc = API.shared.getEntityData(vehicle, "data");
-
-            Database.command.CommandText = String.Format("UPDATE vehicles SET veh_posx = '{0}', veh_posy = '{1}', veh_posz = '{2}', veh_rotx = '{3}', veh_roty = '{4}', veh_rotz = '{5}' WHERE veh_id = {6}",
+            Database.command.CommandText = String.Format("UPDATE vehicles SET veh_posx = '{0}', veh_posy = '{1}', veh_posz = '{2}', veh_rotx = '{3}', veh_roty = '{4}', veh_rotz = '{5}', veh_vw = '{6}' WHERE veh_id = {7}",
                 pos.X.ToString().Replace(",", "."), pos.Y.ToString().Replace(",", "."), pos.Z.ToString().Replace(",", "."),
                 rot.X.ToString().Replace(",", "."), rot.Y.ToString().Replace(",", "."), rot.Z.ToString().Replace(",", "."),
-                vc.uid);
+                vc.vw ,vc.uid);
             Database.command.ExecuteNonQuery();
         }
 
@@ -358,7 +372,10 @@ namespace lsrp_gamemode.Vehicles
                 }
 
                 API.shared.setVehicleEngineStatus(vehicle, !API.shared.getVehicleEngineStatus(vehicle));
-                API.shared.consoleOutput(String.Format("[debug] Gracz {0} {1} pojazd ID: {2}", player.getData("data").name, (API.shared.getVehicleEngineStatus(vehicle) == true ? "odpala" : "gasi"), GetVehicleID(vehicle)));
+                if (Config.DEBUG_MODE == true)
+                {
+                    API.shared.consoleOutput(String.Format("[debug] Gracz {0} {1} pojazd ID: {2}", player.getData("data").name, (API.shared.getVehicleEngineStatus(vehicle) == true ? "odpala" : "gasi"), GetVehicleID(vehicle)));
+                }
             }
         }
 
