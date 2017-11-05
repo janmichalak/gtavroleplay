@@ -33,6 +33,7 @@
     <script src="AdminCommands.cs" type="server" lang="csharp" />
 
     <!-- Vehicle -->
+    <script src="Vehicles/Mods.cs" type="server" lang="csharp" />
     <script src="Vehicles/Vehicle.cs" type="server" lang="csharp" />
   
     <!-- Items -->

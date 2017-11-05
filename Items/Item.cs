@@ -82,7 +82,7 @@ namespace lsrp_gamemode.Items
         {
             List<Item> ItemList = Item.PlayerItems[player.handle];
             Database.command.CommandText = "INSERT INTO items (type, owner, place, name, value1, value2, value3) ";
-            Database.command.CommandText += String.Format("VALUES({0}, {1}, 2, {2}, {3}, {4}, {5}, {6})",
+            Database.command.CommandText += String.Format("VALUES('{0}', '{1}', '2', '{2}', '{3}', '{4}', '{5}')",
                 type, owner_id, name, value1, value2, value3);
             Database.command.ExecuteNonQuery();
             Item item = new Item();
