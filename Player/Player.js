@@ -83,7 +83,14 @@ API.onServerEventTrigger.connect(function (name, args) {
 
         for (var i in items)
         {
-            menu.AddItem(API.createMenuItem("#" + items[i].uid + " " + items[i].name, "(" + items[i].value1 + ", " + items[i].value2 + ")"));
+            if (items[i].use == 1)
+            {
+                menu.AddItem(API.createColoredItem("#" + items[i].uid + " " + items[i].name, "(" + items[i].value1 + ", " + items[i].value2 + ")", "#15a534", "#14cc3b"));
+            }
+            else
+            {
+                menu.AddItem(API.createMenuItem("#" + items[i].uid + " " + items[i].name, "(" + items[i].value1 + ", " + items[i].value2 + ")"));
+            }
         }
 
         menu.OnItemSelect.connect(function (sender, item, index) {

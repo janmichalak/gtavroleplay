@@ -139,7 +139,7 @@ namespace lsrp_gamemode
                     PlayerClass pc = player.getData("data");
                     string name = param[1];
                     int type = Convert.ToInt32(param[2]), value1 = Convert.ToInt32(param[3]), value2 = Convert.ToInt32(param[4]), value3 = Convert.ToInt32(param[5]);
-                    Items.Item.CreateItem(player, pc.id, name, type, value1, value2, value3);
+                    Items.Item.CreateItem(player, pc.uid, name, type, value1, value2, value3);
                 }
             }
         }
@@ -369,5 +369,18 @@ namespace lsrp_gamemode
                    }
                }
            }
+        [Command("oc", "Użycie: /oc [ID]", GreedyArg =true)]
+        public void cmd_Oc(Client player, int model)
+        {
+            Vector3 pos = API.getEntityPosition(player);
+            Vector3 rot = new Vector3 (0, 0, 0);
+            var entityToAttach = API.createObject(-2054442544, new Vector3(), new Vector3(), 0);
+            API.attachEntityToEntity(entityToAttach, player, "IK_L_Hand", new Vector3(0.08, 0.06, 0.03), new Vector3(180, 0, 90));
+            /*API.createObject(model, pos, rot);
+            if(Config.DEBUG_MODE==true)
+            {
+                API.shared.consoleOutput("[debug] Administrator " + Convert.ToString(player.nametag) + " stworzył obiekt: " + Convert.ToString(model));
+            }*/
+        }
     }
 }

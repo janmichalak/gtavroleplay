@@ -36,5 +36,6 @@ namespace lsrp_gamemode
         // Item types
         public static readonly int ITEM_TYPE_NONE = 0;
         public static readonly int ITEM_TYPE_FOOD = 1;
+        public static readonly int ITEM_TYPE_WEAPON = 2;
     }
 }
