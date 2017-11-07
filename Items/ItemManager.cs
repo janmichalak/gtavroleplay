@@ -71,6 +71,7 @@ namespace lsrp_gamemode.Items
                 i.posy = r.GetFloat("posy");
                 i.posz = r.GetFloat("posz");
                 i.dimension = r.GetInt32("dimension");
+                i.use = r.GetInt32("use");
                 ItemList.Add(i);
                 loaded += 1;
             }

@@ -33,6 +33,8 @@ namespace lsrp_gamemode.Items
         public float posz = 0f;
 
         public int dimension = 0;
+
+        public int use = 0;
         #endregion
 
         #region methods
@@ -59,6 +61,26 @@ namespace lsrp_gamemode.Items
                 ItemManager.DeleteItem(item);
 
                 Commands.cmd_me(player, String.Format("spożywa {0}.", name));
+            }
+            //WEAPON
+            if(item.type == Config.ITEM_TYPE_WEAPON)
+            {
+                WeaponHash type = (WeaponHash)item.value1;
+                if (item.use == 0)
+                {
+                    int ammo = item.value2;
+                    Commands.cmd_me(player, "wyjmuje " + item.name + ".");
+                    API.shared.givePlayerWeapon(player, type, ammo, true, true);
+                    item.use = 1;
+                }
+                else
+                {
+                    item.value2 = API.shared.getPlayerWeaponAmmo(player, type);
+                    API.shared.removePlayerWeapon(player, type);
+                    Commands.cmd_me(player, "chowa " + item.name + ".");
+                    Item.SaveItem(item.uid);
+                    item.use = 0;
+                }
             }
         }
         #endregion
@@ -89,12 +111,19 @@ namespace lsrp_gamemode.Items
             item.uid = (int)Database.command.LastInsertedId;
             item.type = type;
             item.name = name;
-            item.owner = owner_id; //to mi nie pasuje bo pewnie powinno pobierac to z 'player' ale nie da sie zadefiniowac tu PlayerClass
+            item.owner = owner_id;
             item.value1 = value1;
             item.value2 = value2;
             item.value3 = value3;
+            item.use = 0;
             ItemList.Add(item);
             return item;
+        }
+        public static void SaveItem(int item_uid)
+        {
+            Item item = GetByUid(item_uid);
+            Database.command.CommandText = String.Format("UPDATE items SET value1='{0}', value2='{1}', value3='{2}' WHERE uid='{3}' ", item.value1, item.value2, item.value3, item.uid);
+            Database.command.ExecuteNonQuery();
         }
         #endregion
     }

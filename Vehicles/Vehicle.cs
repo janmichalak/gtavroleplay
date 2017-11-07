@@ -364,7 +364,6 @@ namespace lsrp_gamemode.Vehicles
             if (API.shared.isPlayerInAnyVehicle(player))
             {
                 NetHandle vehicle = API.shared.getPlayerVehicle(player);
-
                 if (!IsPlayerHasPermForVehicle(player, vehicle))
                 {
                     // throw error
