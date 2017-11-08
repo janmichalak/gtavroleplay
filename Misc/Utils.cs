@@ -21,7 +21,6 @@ namespace lsrp_gamemode.Misc
             foreach (var p in API.shared.getAllPlayers())
             {
                 distance = Vector3.Distance(player.position, p.position);
-                API.shared.consoleOutput(distance.ToString());
                 if(distance <= radius)
                 {
                     if((distance/radius) > 0.8 && (distance/radius) <= 1.0)
