@@ -8,6 +8,7 @@ namespace lsrp_gamemode
 {
     public class Config
     {
+        public static readonly bool DEBUG_MODE = true;
         // Colors
         public static readonly string COLOR_ME = "~#C2A2DA~";
         public static readonly string COLOR_DO = "~#9A9CCD~";
@@ -35,5 +36,6 @@ namespace lsrp_gamemode
         // Item types
         public static readonly int ITEM_TYPE_NONE = 0;
         public static readonly int ITEM_TYPE_FOOD = 1;
+        public static readonly int ITEM_TYPE_WEAPON = 2;
     }
 }

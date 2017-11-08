@@ -17,8 +17,8 @@
   
     <!-- GTA:O Creator -->
     <!-- LATER -->
-    <!--<script src="Player/GTAOCreator/Creator.cs" type="server" lang="csharp" />
-    <script src="Player/GTAOCreator/Creator.js" type="client" lang="javascript" />-->
+    <script src="Player/GTAOCreator/Creator.cs" type="server" lang="csharp" />
+    <script src="Player/GTAOCreator/Creator.js" type="client" lang="javascript" />
 
     <!-- Player -->
     <script src="Player/Login.cs" type="server" lang="csharp" />
@@ -33,6 +33,7 @@
     <script src="AdminCommands.cs" type="server" lang="csharp" />
 
     <!-- Vehicle -->
+    <script src="Vehicles/Mods.cs" type="server" lang="csharp" />
     <script src="Vehicles/Vehicle.cs" type="server" lang="csharp" />
   
     <!-- Items -->

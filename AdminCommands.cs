@@ -54,7 +54,7 @@ namespace lsrp_gamemode
         public void cmd_Gethere(Client player, string input)
         {
             string[] param = input.Split(null);
-            if(param.Length != 1)
+            if (param.Length != 1)
             {
                 API.sendChatMessageToPlayer(player, "Użycie: /gethere [ID Gracza]");
                 return;
@@ -103,7 +103,7 @@ namespace lsrp_gamemode
         public void cmd_Setvw(Client player, string input)
         {
             string[] param = input.Split(null);
-            if(param.Length != 2)
+            if (param.Length != 2)
             {
                 API.sendChatMessageToPlayer(player, "Użycie: /setvw [ID Gracza] [ID świata]");
                 return;
@@ -111,10 +111,10 @@ namespace lsrp_gamemode
 
             int player_id = Int32.Parse(param[0]);
             int vw = Int32.Parse(param[1]);
-            if(player.getData("admin") != 0)
+            if (player.getData("admin") != 0)
             {
                 Client target = PlayerClass.GetPlayerById(player_id);
-                if(API.doesEntityExist(target))
+                if (API.doesEntityExist(target))
                 {
                     API.sendChatMessageToPlayer(player, player_id.ToString());
                     API.sendChatMessageToPlayer(player, vw.ToString());
@@ -122,16 +122,37 @@ namespace lsrp_gamemode
                 }
             }
         }
+        [Command("ap", "Użycie: /ap [stworz | usun | nazwa | owner | value1 | value2]", GreedyArg = true)]
+        public void cmd_Ap(Client player, string input)
+        {
+            if (player.getData("admin") > 0)
+            {
+                string[] param = input.Split(null);
+                if (param[0] == "stworz") //ap stworz nazwa typ value1 value2 value3
+                {
+                    if (param.Length != 6)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /ap stworz [nazwa] [typ] [value1] [value2] [value3]");
+                        return;
+                    }
+                    // PRAWDPODOBNIE POWINNO BYC TU <LIST> ITEMS Z METODY CreateItem, chuj wie, pewnie sporo zjebalem kocham cie blint <3
+                    PlayerClass pc = player.getData("data");
+                    string name = param[1];
+                    int type = Convert.ToInt32(param[2]), value1 = Convert.ToInt32(param[3]), value2 = Convert.ToInt32(param[4]), value3 = Convert.ToInt32(param[5]);
+                    Items.Item.CreateItem(player, pc.uid, name, type, value1, value2, value3);
+                }
+            }
+        }
 
-        [Command("av", "Użycie: /av [ stworz | usun | debug | przypisz | fix | kolor ]", GreedyArg = true)]
+        [Command("av", "Użycie: /av [ stworz | usun | debug | przypisz | fix | kolor | goto | gethere | zaparkuj]", GreedyArg = true)]
         public void cmd_Av(Client player, string input)
         {
             if (player.getData("admin") > 0)
             {
                 string[] param = input.Split(null);
-                if(param[0] == "usun")      // av usun idwozu
+                if (param[0] == "usun")      // av usun idwozu
                 {
-                    if(param.Length != 2)
+                    if (param.Length != 2)
                     {
                         API.sendChatMessageToPlayer(player, "Użycie: /av usun [ID pojazdu]");
                         return;
@@ -149,9 +170,9 @@ namespace lsrp_gamemode
                     VehicleClass.DeleteVehicle(vehicle);
                     API.sendNotificationToPlayer(player, "Pomyślnie usunięto pojazd.");
                 }
-                if(param[0] == "stworz")    // av stworz sentinel 0 1
+                if (param[0] == "stworz")    // av stworz sentinel 0 1
                 {
-                    if(param.Length != 4)
+                    if (param.Length != 4)
                     {
                         API.sendChatMessageToPlayer(player, "Użycie: /av stworz [model] [kolor1] [kolor2]");
                         return;
@@ -160,7 +181,7 @@ namespace lsrp_gamemode
                     VehicleHash model = API.vehicleNameToModel(param[1]);
                     int col1 = Int32.Parse(param[2]), col2 = Int32.Parse(param[3]);
 
-                    if(model == 0)
+                    if (model == 0)
                     {
                         API.sendNotificationToPlayer(player, "~r~Nie znaleziono ~w~pojazdu o takim modelu!");
                         return;
@@ -175,7 +196,7 @@ namespace lsrp_gamemode
                 }
                 if (param[0] == "kolor")    // av color IDveh IDC1 IDC2
                 {
-                    if(param.Length != 4)
+                    if (param.Length != 4)
                     {
                         API.sendChatMessageToPlayer(player, "Użycie: /av kolor [ID wozu] [kolor1] [kolor2]");
                         return;
@@ -186,7 +207,7 @@ namespace lsrp_gamemode
                     int color2 = Convert.ToInt32(param[3]);
                     NetHandle vehicle = VehicleClass.GetVehicleById(vehicle_id);
 
-                    if(vehicle.IsNull)
+                    if (vehicle.IsNull)
                     {
                         API.sendNotificationToPlayer(player, "Nie znaleziono pojazdu o takim ID.");
                         return;
@@ -195,9 +216,9 @@ namespace lsrp_gamemode
                     VehicleClass.UpdateVehicleMainColors(vehicle, color1, color2);
                     API.sendNotificationToPlayer(player, "Pomyślnie zmieniono kolory pojazdu.");
                 }
-                if(param[0] == "fix")    // av fix ID
+                if (param[0] == "fix")    // av fix ID
                 {
-                    if(param.Length != 2)
+                    if (param.Length != 2)
                     {
                         API.sendChatMessageToPlayer(player, "Użycie: /av fix [ID pojazdu]");
                         return;
@@ -206,7 +227,7 @@ namespace lsrp_gamemode
                     int vehicle_id = Int32.Parse(param[1]);
                     NetHandle vehicle = VehicleClass.GetVehicleById(vehicle_id);
 
-                    if(vehicle.IsNull)
+                    if (vehicle.IsNull)
                     {
                         API.sendNotificationToPlayer(player, "Nie znaleziono pojazdu o takim ID.");
                         return;
@@ -215,7 +236,7 @@ namespace lsrp_gamemode
                     API.repairVehicle(vehicle);
                     API.sendNotificationToPlayer(player, "Pomyślnie naprawiono pojazd.");
                 }
-                if(param[0] == "przypisz")  // av przypisz gracz 1 1
+                if (param[0] == "przypisz")  // av przypisz gracz 1 1
                 {
                     if (param.Length != 4)
                     {
@@ -227,12 +248,12 @@ namespace lsrp_gamemode
                     int vehicle_id = Int32.Parse(param[2]);
                     int owner_id = Int32.Parse(param[3]);
 
-                    if(towho == "gracz")
+                    if (towho == "gracz")
                     {
                         Client target = PlayerClass.GetPlayerById(owner_id);
                         NetHandle vehicle = VehicleClass.GetVehicleById(vehicle_id);
-                        
-                        if(target.IsNull || vehicle.IsNull || !target.getData("logged"))
+
+                        if (target.IsNull || vehicle.IsNull || !target.getData("logged"))
                         {
                             API.sendChatMessageToPlayer(player, "Błąd: Wystąpił błąd podczas przypisywania pojazdu.");
                             return;
@@ -246,25 +267,78 @@ namespace lsrp_gamemode
                         VehicleClass.UpdateVehicleOwner(vc.uid, vc.ownertype, vc.owner);
                         API.sendChatMessageToPlayer(player, String.Format("Pomyślnie przepisano pojazd {0} graczowi {1} [{2}]", API.getVehicleDisplayName(vc.model), pc.displayName, pc.id));
                     }
-                    if(towho == "grupa")
+                    if (towho == "grupa")
                     {
                         /// TODO
                     }
                 }
-                if(param[0] == "debug")
+                if (param[0] == "debug")
                 {
                     NetHandle vehicle = API.getPlayerVehicle(player);
-                    if(!vehicle.IsNull)
+                    if (!vehicle.IsNull)
                     {
                         API.sendChatMessageToPlayer(player, String.Format("Paliwo: {0}", API.getVehicleFuelLevel(vehicle)));
                         API.sendChatMessageToPlayer(player, String.Format("Olej: {0}", API.getVehicleOilLevel(vehicle)));
                         API.sendChatMessageToPlayer(player, String.Format("HP i EngineHP: {0}, {1}", API.getVehicleHealth(vehicle), API.getVehicleEngineHealth(vehicle)));
-                        
+
                     }
                 }
-                if(param[0] == "usun")
+
+                if (param[0] == "goto")
                 {
-                    
+                    if (param.Length != 2)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /av goto [ID]");
+                        return;
+                    }
+                    if (VehicleClass.GetVehicleById(Convert.ToInt32(param[1])).IsNull)
+                    {
+                        API.sendChatMessageToPlayer(player, "Nie ma pojazdu o takim ID.");
+                        return;
+                    }
+                    NetHandle vehicle = VehicleClass.GetVehicleById(Convert.ToInt32(param[1]));
+                    Vector3 new_pos = API.getEntityPosition(vehicle);
+                    new_pos.X += 2;
+                    new_pos.Y += 2;
+                    API.setEntityDimension(player, API.getEntityDimension(vehicle));
+                    API.setEntityPosition(player, new_pos);
+                }
+
+                if (param[0] == "gethere")
+                {
+                    if (param.Length != 2)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /av gethere [ID]");
+                        return;
+                    }
+                    if (VehicleClass.GetVehicleById(Convert.ToInt32(param[1])).IsNull)
+                    {
+                        API.sendChatMessageToPlayer(player, "Nie ma pojazdu o takim ID.");
+                        return;
+                    }
+                    NetHandle vehicle = VehicleClass.GetVehicleById(Convert.ToInt32(param[1]));
+                    Vector3 new_pos = player.position;
+                    new_pos.X += 2;
+                    new_pos.Y += 2;
+                    API.setEntityDimension(vehicle, player.dimension);
+                    API.setEntityPosition(vehicle, new_pos);
+                }
+
+                if (param[0] == "zaparkuj")
+                {
+                    if (param.Length != 2)
+                    {
+                        API.sendChatMessageToPlayer(player, "Użycie: /av zaparkuj [ID]");
+                        return;
+                    }
+                    if (VehicleClass.GetVehicleById(Convert.ToInt32(param[1])).IsNull)
+                    {
+                        API.sendChatMessageToPlayer(player, "Nie ma pojazdu o takim ID.");
+                        return;
+                    }
+                    NetHandle vehicle = VehicleClass.GetVehicleById(Convert.ToInt32(param[1]));
+                    VehicleClass.ParkVehicle(vehicle);
+                    API.sendNotificationToPlayer(player, "Przeparkowałeś pojazd o ID: " + param[1]);
                 }
             }
         }
@@ -273,13 +347,40 @@ namespace lsrp_gamemode
         public void cmd_Gc(Client player, string msg)
         {
             string send = String.Format("(( {0} [{1}]: {2} ))", player.getData("globalname"), player.getData("data").id, msg);
-            foreach(var i in API.getAllPlayers())
+            foreach (var i in API.getAllPlayers())
             {
-                if(i.getData("admin") > 0 || i.getData("admin") < 0)
+                if (i.getData("admin") > 0 || i.getData("admin") < 0)
                 {
                     API.sendChatMessageToPlayer(i, Config.COLOR_GC, send);
                 }
             }
+        }
+           [Command("vehmod")]
+           public void cmd_Vehmod(Client player)
+           {
+            VehicleHash model = (VehicleHash)API.getEntityModel(API.getPlayerVehicle(player));
+            System.IO.StreamWriter file = new System.IO.StreamWriter(@API.getVehicleDisplayName(model)+".txt");
+            foreach (var modtype in API.getVehicleValidMods(model))
+               {
+                 file.WriteLine("MODTYPE"+Convert.ToString(modtype.Key));
+                   foreach (var values in modtype.Value)
+                   {
+                       file.WriteLine("MOD KEY: "+Convert.ToString(values.Key) + " " + values.Value);
+                   }
+               }
+           }
+        [Command("oc", "Użycie: /oc [ID]", GreedyArg =true)]
+        public void cmd_Oc(Client player, int model)
+        {
+            Vector3 pos = API.getEntityPosition(player);
+            Vector3 rot = new Vector3 (0, 0, 0);
+            var entityToAttach = API.createObject(-2054442544, new Vector3(), new Vector3(), 0);
+            API.attachEntityToEntity(entityToAttach, player, "IK_L_Hand", new Vector3(0.08, 0.06, 0.03), new Vector3(180, 0, 90));
+            /*API.createObject(model, pos, rot);
+            if(Config.DEBUG_MODE==true)
+            {
+                API.shared.consoleOutput("[debug] Administrator " + Convert.ToString(player.nametag) + " stworzył obiekt: " + Convert.ToString(model));
+            }*/
         }
     }
 }

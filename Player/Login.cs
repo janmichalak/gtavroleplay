@@ -32,6 +32,10 @@ namespace lsrp_gamemode.Player
             player.nametag = p.displayName;
             player.health = p.health;
             Utils.SetMoney(player, p.cash);
+            if (Config.DEBUG_MODE == true && player.getData("admin") != 0)
+            {
+                API.shared.sendNotificationToPlayer(player, "~r~Serwer odpalony w trybie debugowania", false);
+            }
 
             // GTAO: Character
             GTAOnlineCharacter.initializePedFace(player);
