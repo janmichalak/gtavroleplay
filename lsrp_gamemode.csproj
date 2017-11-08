@@ -43,6 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\MySql.Data.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -61,9 +64,14 @@
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\DBConfig.cs" />
     <Compile Include="Database\DB.cs" />
+    <Compile Include="Items\Item.cs" />
+    <Compile Include="Items\ItemManager.cs" />
     <Compile Include="LSRP.cs" />
+    <Compile Include="Misc\InteriorBrowser\InteriorData.cs" />
+    <Compile Include="Misc\InteriorBrowser\Main.cs" />
     <Compile Include="Player\ClientEvents.cs" />
     <Compile Include="Player\GTAOCharacter\gtao_api.cs" />
+    <Compile Include="Player\GTAOCreator\Creator.cs" />
     <Compile Include="Player\Login.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +82,8 @@
     <Content Include="meta.xml" />
     <Content Include="Player\Player.js" />
     <Content Include="Player\GTAOCharacter\gtao_handler.js" />
+    <Content Include="Misc\InteriorBrowser\interiors.js" />
+    <Content Include="Player\GTAOCreator\Creator.js" />
     <TypeScriptCompile Include="types-gt-mp\Definitions\Declarations.d.ts" />
     <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Contracts.d.ts" />
     <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.GUI.d.ts" />
@@ -106,6 +116,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="tsconfig.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Player\GTAOCreator\CustomCharacters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

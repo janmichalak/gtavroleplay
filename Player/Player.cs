@@ -118,7 +118,7 @@ namespace lsrp_gamemode.Player
         public static void OnChatMessageHandler(Client player, string message, CancelEventArgs e)
         {
             // Roleplay Chat
-            Utils.ChatMethod(player, 10, message, Config.COLOR_CHAT1, Config.COLOR_CHAT2, Config.COLOR_CHAT3, Config.COLOR_CHAT4);
+            Utils.ChatMethod(player, 15, message, Config.COLOR_CHAT1, Config.COLOR_CHAT2, Config.COLOR_CHAT3, Config.COLOR_CHAT4);
             e.Cancel = true;
         }
 
