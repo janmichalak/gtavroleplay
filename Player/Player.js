@@ -66,7 +66,7 @@ API.onServerEventTrigger.connect(function (name, args) {
         menu.AddItem(API.createMenuItem("3. Informacje o przedmiocie", ""));
 
         menu.OnItemSelect.connect(function (sender, item, index) {
-            API.triggerServerEvent("item_selected_item", selected_item_uid);
+            API.triggerServerEvent("item_selected_item", selected_item_uid, index);
         });
 
         menu.Visible = true;
@@ -211,6 +211,9 @@ API.onKeyUp.connect(function (sender, e) {
         if (API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
             API.triggerServerEvent("start_stop_engine");
         }
+    }
+    if (e.KeyCode == Keys.P) {
+        API.triggerServerEvent("client_p");
     }
 });
 

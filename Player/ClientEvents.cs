@@ -52,9 +52,15 @@ namespace lsrp_gamemode.Player
             if(eventName == "item_selected_item")
             {
                 int item_uid = Int32.Parse(arguments[0].ToString());
-                if(item_uid > 0)
+                int idx = Int32.Parse(arguments[1].ToString());
+
+                if(item_uid > 0) 
                 {
-                    Items.Item.Use(player, item_uid);
+                    if (idx == 0)    // use
+                        Items.Item.Use(player, item_uid);
+                    if (idx == 1)    // drop
+                        Items.Item.Drop(player, item_uid);
+
                 }
                 API.shared.triggerClientEvent(player, "hide_menu");
             }
@@ -74,6 +80,11 @@ namespace lsrp_gamemode.Player
             if(eventName == "start_stop_engine") // START STOP ENGINE
             {
                 VehicleClass.StartStopEngine(player);
+            }
+
+            if(eventName == "client_p")
+            {
+                Commands.cmd_P(player, "lista");
             }
         }
     }

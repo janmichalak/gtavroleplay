@@ -25,7 +25,7 @@ namespace lsrp_gamemode
          **/
 
         [Command("p", "Użycie: /p [ lista | podnies ]", GreedyArg = true)]
-        public void cmd_P(Client player, string input)
+        public static void cmd_P(Client player, string input)
         {
             string[] param = input.Split(null);
 
@@ -39,12 +39,12 @@ namespace lsrp_gamemode
                         
                         API.shared.sendChatMessageToPlayer(player, "Przedmiot: " + i.name + ", uid: " + i.uid);
                     }*/
-                    var json = API.toJson(items);
-                    API.triggerClientEvent(player, "item_select", json);
+                    var json = API.shared.toJson(items);
+                    API.shared.triggerClientEvent(player, "item_select", json);
                 }
                 else
                 {
-                    API.sendNotificationToPlayer(player, "Nie posiadasz żadnego przedmiotu.");
+                    API.shared.sendNotificationToPlayer(player, "Nie posiadasz żadnego przedmiotu.");
                     return;
                 }
             }

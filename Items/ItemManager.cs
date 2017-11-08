@@ -16,12 +16,52 @@ namespace lsrp_gamemode.Items
             API.onPlayerFinishedDownload += Items_PlayerJoin;
         }
 
-        // TODO -> on resource start
-        public static void LoadItems()
+        // save all items from Item.FloorItems to DB
+        public static void UnloadItems()
         {
 
         }
 
+        // TODO -> on resource start
+        public static void LoadItems()
+        {
+            API.shared.consoleOutput("[load] Wczytuje obiekty na ziemi...");
+            Database.command.CommandText = String.Format("SELECT * FROM items WHERE place = {0}", Config.PLACE_ITEM_NONE);
+            Database.Reader = Database.command.ExecuteReader();
+
+            var r = Database.Reader; int loaded = 0;
+            while(r.Read())
+            {
+                Item i = new Item();
+                i.uid = r.GetInt32("uid");
+                i.type = r.GetInt32("type");
+                i.owner = r.GetInt32("owner");
+                i.place = r.GetInt32("place");
+                i.name = r.GetString("name");
+                i.value1 = r.GetInt32("value1");
+                i.value2 = r.GetInt32("value2");
+                i.value3 = r.GetInt32("value3");
+                i.string1 = r.GetString("str1");
+                i.string2 = r.GetString("str2");
+                i.posx = r.GetFloat("posx");
+                i.posy = r.GetFloat("posy");
+                i.posz = r.GetFloat("posz");
+                i.dimension = r.GetInt32("dimension");
+                i.use = r.GetInt32("use");
+                i.obj = API.shared.createObject(Config.DEFAULT_ITEM_OBJECT_ID, new Vector3(i.posx, i.posy, i.posz), new Vector3(0, 0, 0), i.dimension);
+
+                Item.FloorItems.Add(i);
+                loaded += 1;
+            }
+
+            Database.Reader.Close();
+            API.shared.consoleOutput("[load] Załadowano " + loaded + " przedmiotów.");
+        }
+
+        /// <summary>
+        /// Delete item
+        /// </summary>
+        /// <param name="item"></param>
         public static void DeleteItem(Item item)
         {
             Database.command.CommandText = String.Format("DELETE FROM items WHERE uid = {0}", item.uid);
