@@ -11,6 +11,7 @@ using GrandTheftMultiplayer.Shared.Math;
 using lsrp_gamemode.Misc;
 using lsrp_gamemode.Player;
 using lsrp_gamemode.Vehicles;
+using lsrp_gamemode.Items;
 
 namespace lsrp_gamemode
 {
@@ -42,6 +43,7 @@ namespace lsrp_gamemode
 
             // Loads
             VehicleClass.LoadVehicles();
+            ItemManager.LoadItems();
         }
 
         // OnServerResourceStart

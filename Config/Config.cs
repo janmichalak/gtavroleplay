@@ -8,7 +8,9 @@ namespace lsrp_gamemode
 {
     public class Config
     {
+        // Debug
         public static readonly bool DEBUG_MODE = true;
+
         // Colors
         public static readonly string COLOR_ME = "~#C2A2DA~";
         public static readonly string COLOR_DO = "~#9A9CCD~";
@@ -37,5 +39,17 @@ namespace lsrp_gamemode
         public static readonly int ITEM_TYPE_NONE = 0;
         public static readonly int ITEM_TYPE_FOOD = 1;
         public static readonly int ITEM_TYPE_WEAPON = 2;
+        public static readonly int ITEM_TYPE_CLOTH = 3;
+        public static readonly int ITEM_TYPE_WATCH = 4;
+
+        // Item save types
+        public const int ITEM_SAVE_NONE = 0;
+        public const int ITEM_SAVE_BASIC = 1;
+        public const int ITEM_SAVE_POS = 2;
+        public const int ITEM_SAVE_NAME = 4;
+        public const int ITEM_SAVE_OWNER = 8;
+
+        // Default item object
+        public static readonly int DEFAULT_ITEM_OBJECT_ID = -719727517;
     }
 }
