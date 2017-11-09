@@ -48,7 +48,12 @@ namespace lsrp_gamemode.Items
                 i.posz = r.GetFloat("posz");
                 i.dimension = r.GetInt32("dimension");
                 i.use = r.GetInt32("use");
-                i.obj = API.shared.createObject(Config.DEFAULT_ITEM_OBJECT_ID, new Vector3(i.posx, i.posy, i.posz), new Vector3(0, 0, 0), i.dimension);
+
+                Tuple<int, Vector3> details = Item.GetItemObjectAndRotation(i);
+                int model = details.Item1;
+                Vector3 rot = details.Item2;
+
+                i.obj = API.shared.createObject(model, new Vector3(i.posx, i.posy, i.posz), rot, i.dimension);
                 NetHandle label = API.shared.createTextLabel("~s~Naciśnij ~b~E ~s~aby podnieść", 
                     new Vector3(i.posx, i.posy, (i.posz + 0.25f)), 6.5f, 0.65f, true, i.dimension);
                 API.shared.setEntityData(i.obj, "item", i);

@@ -52,7 +52,13 @@ namespace lsrp_gamemode.Items
             Item item = GetByUid(item_uid);
             if (item.uid == 0)
             {
-                API.shared.sendChatMessageToPlayer(player, "Wystąpił błąd podczas używania przedmiotu!");
+                API.shared.sendNotificationToPlayer(player, "Wystąpił błąd podczas używania przedmiotu!");
+                return;
+            }
+
+            if(item.use > 0)
+            {
+                API.shared.sendNotificationToPlayer(player, "Nie możesz wyrzucić używanego przedmiotu!");
                 return;
             }
 
@@ -65,7 +71,11 @@ namespace lsrp_gamemode.Items
             item.posz = pos.Z;
             item.dimension = API.shared.getEntityDimension(player);
 
-            item.obj = API.shared.createObject(Config.DEFAULT_ITEM_OBJECT_ID, pos, new Vector3(0, 0, 0), player.dimension);
+            Tuple<int, Vector3> details = GetItemObjectAndRotation(item);
+            int model = details.Item1;
+            Vector3 rot = details.Item2;
+
+            item.obj = API.shared.createObject(model, pos, rot, player.dimension);
             pos.Z += 0.25f; NetHandle label = API.shared.createTextLabel("~s~Naciśnij ~b~E ~s~aby podnieść", pos, 6.5f, 0.65f, true, item.dimension);
             API.shared.setEntityData(item.obj, "item", item);
             API.shared.setEntityData(item.obj, "label", label);
@@ -212,6 +222,27 @@ namespace lsrp_gamemode.Items
         #endregion
 
         #region misc methods
+        public static Tuple<int, Vector3> GetItemObjectAndRotation(Item item)
+        {
+            int model = Config.DEFAULT_ITEM_OBJECT_ID;
+            Vector3 rot = new Vector3(0, 0, Convert.ToDouble(new Random().Next(0, 360)));
+
+            // Weapons Models
+            if (item.type == Config.ITEM_TYPE_WEAPON)
+            {
+                try
+                {
+                    model = Config.WeaponObjects[item.value1];
+                    rot.X = 90;
+                }
+                catch
+                {
+                    model = Config.DEFAULT_ITEM_OBJECT_ID;
+                }
+            }
+            return Tuple.Create(model, rot);
+        }
+
         public static Item GetItemInRangeOfPlayer(Client player)
         {
             Item item = null;

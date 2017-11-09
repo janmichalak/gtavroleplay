@@ -54,6 +54,13 @@ namespace lsrp_gamemode
         // Default item object
         public static readonly int DEFAULT_ITEM_OBJECT_ID = -719727517;
 
+        // Weapon objects
+        public static readonly Dictionary<int, int> WeaponObjects = new Dictionary<int, int>
+        {
+            // AssaultSMG
+            {-270015777, -473574177 }
+        };
+
         [Flags]
         public enum AnimationFlags
         {
