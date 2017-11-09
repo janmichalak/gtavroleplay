@@ -10,6 +10,7 @@ using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using lsrp_gamemode.Vehicles;
+using lsrp_gamemode.Items;
 
 namespace lsrp_gamemode.Player
 {
@@ -85,6 +86,39 @@ namespace lsrp_gamemode.Player
             if(eventName == "client_p")
             {
                 Commands.cmd_P(player, "lista");
+            }
+
+            if(eventName == "client_e")
+            {
+                if(API.shared.isPlayerInAnyVehicle(player))
+                {
+
+                } else
+                {
+                    // Check is any free object in range.
+                    Item item = Item.GetItemInRangeOfPlayer(player);
+                    if(item != null)
+                    {
+                        PlayerClass pc = API.shared.getEntityData(player, "data");
+                        item.place = Config.PLACE_ITEM_PLAYER;
+                        item.owner = pc.uid;
+                        item.posz = 0f;
+                        item.posx = 0f;
+                        item.posy = 0f;
+
+                        Item.FloorItems.Remove(item);
+                        Item.PlayerItems[player.handle].Add(item);
+             
+                        Commands.cmd_me(player, String.Format("podnosi przedmiot {0}.", item.name));
+                        Item.Save(item.uid, (Config.ITEM_SAVE_OWNER | Config.ITEM_SAVE_POS));
+
+                        API.shared.playPlayerAnimation(player, (int)(Config.AnimationFlags.AllowPlayerControl), "anim@mp_snowball", "pickup_snowball");
+                        NetHandle label = API.shared.getEntityData(item.obj, "label");
+                        API.shared.deleteEntity(label);
+                        API.shared.deleteEntity(item.obj);
+                        return;
+                    }
+                }
             }
         }
     }
