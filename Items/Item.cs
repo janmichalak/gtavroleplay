@@ -66,8 +66,12 @@ namespace lsrp_gamemode.Items
             item.dimension = API.shared.getEntityDimension(player);
 
             item.obj = API.shared.createObject(Config.DEFAULT_ITEM_OBJECT_ID, pos, new Vector3(0, 0, 0), player.dimension);
+            pos.Z += 0.25f; NetHandle label = API.shared.createTextLabel("~s~Naciśnij ~b~E ~s~aby podnieść", pos, 6.5f, 0.65f, true, item.dimension);
+            API.shared.setEntityData(item.obj, "item", item);
+            API.shared.setEntityData(item.obj, "label", label);
             Save(item_uid, (Config.ITEM_SAVE_OWNER | Config.ITEM_SAVE_POS));
 
+            API.shared.playPlayerAnimation(player, (int)(Config.AnimationFlags.AllowPlayerControl), "anim@narcotics@trash", "drop_front");
             Commands.cmd_me(player, "odkłada przedmiot na ziemię.");
             var items = PlayerItems[player.handle];
             items.Remove(item);
@@ -145,23 +149,6 @@ namespace lsrp_gamemode.Items
                     Config.COLOR_B, time.Hours, (time.Minutes > 9 ? time.Minutes.ToString() : "0" + time.Minutes.ToString())));
             }
         }
-        #endregion
-
-        #region misc methods
-        public static Item GetByUid(int item_uid)
-        {
-            foreach(KeyValuePair<NetHandle, List<Item>> pi in PlayerItems)
-            {
-                foreach(Item i in pi.Value)
-                {
-                    if(i.uid == item_uid)
-                    {
-                        return i;
-                    }
-                }
-            }
-            return new Item();
-        }
 
         /// <summary>
         /// Create item
@@ -202,16 +189,16 @@ namespace lsrp_gamemode.Items
         {
             Item item = GetByUid(item_uid);
             string update = String.Format("UPDATE items SET ");
-            if((savetype & Config.ITEM_SAVE_BASIC) != 0)
+            if ((savetype & Config.ITEM_SAVE_BASIC) != 0)
             {
                 update += String.Format("value1='{0}', value2='{1}', value3='{2}', ", item.value1, item.value2, item.value3);
             }
-            if((savetype & Config.ITEM_SAVE_POS) != 0)
+            if ((savetype & Config.ITEM_SAVE_POS) != 0)
             {
-                update += String.Format("posx='{0}', posy='{1}', posz='{2}', dimension='{3}', ", 
+                update += String.Format("posx='{0}', posy='{1}', posz='{2}', dimension='{3}', ",
                     item.posx.ToString().Replace(",", "."), item.posy.ToString().Replace(",", "."), item.posz.ToString().Replace(",", "."), item.dimension);
             }
-            if((savetype & Config.ITEM_SAVE_OWNER) != 0)
+            if ((savetype & Config.ITEM_SAVE_OWNER) != 0)
             {
                 update += String.Format("owner='{0}', place='{1}', ", item.owner, item.place);
             }
@@ -221,6 +208,43 @@ namespace lsrp_gamemode.Items
 
             Database.command.CommandText = update;
             Database.command.ExecuteNonQuery();
+        }
+        #endregion
+
+        #region misc methods
+        public static Item GetItemInRangeOfPlayer(Client player)
+        {
+            Item item = null;
+            int dimension = player.dimension;
+            Vector3 pos = player.position;
+
+            foreach(var i in FloorItems)
+            {
+                if(i.dimension == dimension)
+                {
+                    if(Vector3.Distance(pos, new Vector3(i.posx, i.posy, i.posz)) < 3.0f)
+                    {
+                        item = i;
+                        break;
+                    }
+                }
+            }
+            return item;
+        }
+
+        public static Item GetByUid(int item_uid)
+        {
+            foreach(KeyValuePair<NetHandle, List<Item>> pi in PlayerItems)
+            {
+                foreach(Item i in pi.Value)
+                {
+                    if(i.uid == item_uid)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return new Item();
         }
         #endregion
     }

@@ -215,6 +215,9 @@ API.onKeyUp.connect(function (sender, e) {
     if (e.KeyCode == Keys.P) {
         API.triggerServerEvent("client_p");
     }
+    if (e.KeyCode == Keys.E) {
+        API.triggerServerEvent("client_e");
+    }
 });
 
 // Stream In

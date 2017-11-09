@@ -49,6 +49,10 @@ namespace lsrp_gamemode.Items
                 i.dimension = r.GetInt32("dimension");
                 i.use = r.GetInt32("use");
                 i.obj = API.shared.createObject(Config.DEFAULT_ITEM_OBJECT_ID, new Vector3(i.posx, i.posy, i.posz), new Vector3(0, 0, 0), i.dimension);
+                NetHandle label = API.shared.createTextLabel("~s~Naciśnij ~b~E ~s~aby podnieść", 
+                    new Vector3(i.posx, i.posy, (i.posz + 0.25f)), 6.5f, 0.65f, true, i.dimension);
+                API.shared.setEntityData(i.obj, "item", i);
+                API.shared.setEntityData(i.obj, "label", label);
 
                 Item.FloorItems.Add(i);
                 loaded += 1;

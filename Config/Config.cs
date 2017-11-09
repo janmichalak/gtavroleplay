@@ -17,6 +17,8 @@ namespace lsrp_gamemode
         public static readonly string COLOR_B = "~#AFAFAF~";
         public static readonly string COLOR_DARKBLUE = "~#2010E0~";
         public static readonly string COLOR_GC = "~#56cbd3~";
+        public static readonly string COLOR_WHITE1 = "~#DDDDDD~";
+        public static readonly string COLOR_LIGHTBLUE = "~#3399FF~";
 
         // Chat Colors
         public static readonly string COLOR_CHAT1 = "~#FFFFFF~";
@@ -51,5 +53,15 @@ namespace lsrp_gamemode
 
         // Default item object
         public static readonly int DEFAULT_ITEM_OBJECT_ID = -719727517;
+
+        [Flags]
+        public enum AnimationFlags
+        {
+            Loop = 1 << 0,
+            StopOnLastFrame = 1 << 1,
+            OnlyAnimateUpperBody = 1 << 4,
+            AllowPlayerControl = 1 << 5,
+            Cancellable = 1 << 7
+        }
     }
 }
