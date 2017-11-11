@@ -12,6 +12,7 @@ using lsrp_gamemode.Misc;
 using lsrp_gamemode.Player;
 using lsrp_gamemode.Vehicles;
 using lsrp_gamemode.Items;
+using System.Timers;
 
 namespace lsrp_gamemode
 {
@@ -41,9 +42,46 @@ namespace lsrp_gamemode
             // Set world time
             API.setTime(20, 0);
 
+            // Main server timers
+            Timer secondTimer = new Timer();
+            secondTimer.Elapsed += new ElapsedEventHandler(OnSecondTimer);
+            secondTimer.Interval = 1000;
+            secondTimer.Enabled = true;
+
+            Timer minuteTimer = new Timer();
+            minuteTimer.Elapsed += new ElapsedEventHandler(OnMinuteTimer);
+            minuteTimer.Interval = 60000;
+            minuteTimer.Enabled = true;
+
             // Loads
             VehicleClass.LoadVehicles();
             ItemManager.LoadItems();
+        }
+
+        // OnMinuteTimer
+        private static void OnMinuteTimer(object source, ElapsedEventArgs e)
+        {
+            // Add minute every minute tick
+            TimeSpan time = API.shared.getTime();
+            API.shared.setTime(time.Hours, (time.Minutes + 1));
+        }
+
+        // OnSecondTimer
+        private static void OnSecondTimer(object source, ElapsedEventArgs e)
+        {
+            List<Client> players = API.shared.getAllPlayers();
+            foreach(Client player in players)
+            {
+                bool logged = API.shared.getEntityData(player, "logged");
+                if(logged)
+                {
+                    // Attach weapons
+                    Item.ApplyPlayerAttachedWeapons(player);
+                } else
+                {
+                    
+                }
+            }
         }
 
         // OnServerResourceStart
