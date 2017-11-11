@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using lsrp_gamemode.Misc;
+using GrandTheftMultiplayer.Shared;
 
 namespace lsrp_gamemode.Player
 {
@@ -36,6 +37,7 @@ namespace lsrp_gamemode.Player
             player.setData("logged", false);
             player.setData("dl", false);
             player.setData("data", new PlayerClass());
+            player.setData("attached_weapons", new Dictionary<WeaponHash, NetHandle>());
         }
 
         #region Player ID System

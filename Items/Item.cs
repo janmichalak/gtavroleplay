@@ -121,9 +121,21 @@ namespace lsrp_gamemode.Items
             // WEAPON
             if(item.type == Config.ITEM_TYPE_WEAPON)
             {
+                WeaponType w = API.shared.getWeaponType((WeaponHash)item.value1);
                 WeaponHash type = (WeaponHash)item.value1;
                 if (item.use == 0)
                 {
+                    WeaponHash[] weapons = API.shared.getPlayerWeapons(player);
+                    foreach(WeaponHash wp in weapons)
+                    {
+                        WeaponType wp_t = API.shared.getWeaponType(wp);
+                        if(wp_t == w)
+                        {
+                            API.shared.sendNotificationToPlayer(player, "Nie możesz używać jednocześnie dwóch broni tej samej klasy");
+                            return;
+                        }
+                    }
+
                     int ammo = item.value2;
                     Commands.cmd_me(player, "wyjmuje " + item.name + ".");
                     API.shared.givePlayerWeapon(player, type, ammo, true, true);
@@ -131,7 +143,12 @@ namespace lsrp_gamemode.Items
                 }
                 else
                 {
-                    item.value2 = API.shared.getPlayerWeaponAmmo(player, type);
+                    // Do not save ammo if it's melee type
+                    if(w != WeaponType.Melee && w != WeaponType.Parachute && w != WeaponType.Unknown)
+                    {
+                        item.value2 = API.shared.getPlayerWeaponAmmo(player, type);
+                    }
+
                     API.shared.removePlayerWeapon(player, type);
                     Commands.cmd_me(player, "chowa " + item.name + ".");
                     Item.Save(item.uid, Config.ITEM_SAVE_BASIC);
@@ -144,6 +161,10 @@ namespace lsrp_gamemode.Items
             {
                 PedHash skin = (PedHash)item.value1;
                 API.shared.setPlayerSkin(player, skin);
+
+                // BUG
+                // Gdy zmienia się skina to cofa wszystkie bronie
+                // Więc po "odużyciu" jest ammo 0 i sie resetuje
 
                 if(skin == PedHash.FreemodeFemale01 || skin == PedHash.FreemodeMale01)
                 {
@@ -222,6 +243,11 @@ namespace lsrp_gamemode.Items
         #endregion
 
         #region misc methods
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public static Tuple<int, Vector3> GetItemObjectAndRotation(Item item)
         {
             int model = Config.DEFAULT_ITEM_OBJECT_ID;
@@ -243,6 +269,11 @@ namespace lsrp_gamemode.Items
             return Tuple.Create(model, rot);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
         public static Item GetItemInRangeOfPlayer(Client player)
         {
             Item item = null;
@@ -253,7 +284,7 @@ namespace lsrp_gamemode.Items
             {
                 if(i.dimension == dimension)
                 {
-                    if(Vector3.Distance(pos, new Vector3(i.posx, i.posy, i.posz)) < 3.0f)
+                    if(Vector3.Distance(pos, new Vector3(i.posx, i.posy, i.posz)) < 1.5f)
                     {
                         item = i;
                         break;
@@ -263,6 +294,11 @@ namespace lsrp_gamemode.Items
             return item;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item_uid"></param>
+        /// <returns></returns>
         public static Item GetByUid(int item_uid)
         {
             foreach(KeyValuePair<NetHandle, List<Item>> pi in PlayerItems)
@@ -276,6 +312,80 @@ namespace lsrp_gamemode.Items
                 }
             }
             return new Item();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        public static void ApplyPlayerAttachedWeapons(Client player)
+        {
+            Dictionary<WeaponHash, NetHandle> playerAttach = player.getData("attached_weapons");
+            WeaponHash currentWeapon = API.shared.getPlayerCurrentWeapon(player);
+            WeaponHash[] weapons = API.shared.getPlayerWeapons(player);
+            //API.shared.consoleOutput(String.Format("{0} {1}", (int)currentWeapon, (WeaponHash)currentWeapon ));
+
+            // Remove
+            foreach(var item in playerAttach)
+            {
+                bool found = false;
+                foreach(WeaponHash w in weapons)
+                {
+                    if(w == item.Key)
+                    {
+                        found = true;
+                    }
+                }
+
+                // Delete unused items
+                if(!found)
+                {
+                    API.shared.deleteEntity(item.Value);
+                    playerAttach.Remove(item.Key);
+                }
+
+                // Delete current used attached
+                if((int)item.Key == (int)currentWeapon)
+                {
+                    API.shared.deleteEntity(item.Value);
+                    playerAttach.Remove(item.Key);
+                }
+            }
+
+            // Add
+            foreach(WeaponHash w in weapons)
+            {
+                if((WeaponHash)currentWeapon != (WeaponHash)w && !playerAttach.ContainsKey((WeaponHash)w))
+                {
+                    WeaponType wtype = API.shared.getWeaponType((WeaponHash)w);
+                    Vector3 offset = new Vector3(0, 0, 0);
+                    Vector3 rot = new Vector3(0, 0, 0);
+                    if(wtype == WeaponType.AssaultRifles || wtype == WeaponType.HeavyWeapons || wtype == WeaponType.SniperRifles)
+                    {
+                        offset.X += 0.1f; // up/down
+                        offset.Y -= 0.15f; // front/behind
+                        offset.Z += 0.1f; // left/right
+                        rot.X += 180f; // wokół osi "do gory"
+                    }
+                    if(wtype == WeaponType.Handguns)
+                    {
+                        offset.Z += 0.2f;
+                        offset.X -= 0.2f;
+                        rot.X += 90f;
+                        rot.Z += 90f; // wokol osi "nwm"
+                        rot.Y += 90f; // wokół osi "lewo/prawo"
+                    }
+                    if(wtype == WeaponType.MachineGuns || wtype == WeaponType.Shotguns)
+                    {
+                        offset.X += 0.1f;
+                        offset.Y -= 0.15f;
+                        offset.Z -= 0.1f;
+                    }
+                    NetHandle obj = API.shared.createObject(Config.WeaponObjects[(int)w], new Vector3(0, 0, 0), new Vector3(0, 0, 0), player.dimension);
+                    API.shared.attachEntityToEntity(obj, player.handle, "SKEL_Spine2", offset, rot);
+                    playerAttach.Add(w, obj);
+                }
+            }
         }
         #endregion
     }
