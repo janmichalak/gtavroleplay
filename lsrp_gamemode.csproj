@@ -63,6 +63,8 @@
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\DBConfig.cs" />
     <Compile Include="Database\DB.cs" />
+    <Compile Include="Doors\Door.cs" />
+    <Compile Include="Doors\DoorManager.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemManager.cs" />
     <Compile Include="LSRP.cs" />
@@ -96,6 +98,8 @@
     <Content Include="Player\GTAOCharacter\gtao_handler.js" />
     <Content Include="Misc\InteriorBrowser\interiors.js" />
     <Content Include="Player\GTAOCreator\Creator.js" />
+    <Content Include="README.txt" />
+    <Content Include="schema.sql" />
     <TypeScriptCompile Include="types-gt-mp\Definitions\Declarations.d.ts" />
     <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.Contracts.d.ts" />
     <TypeScriptCompile Include="types-gt-mp\Definitions\GrandTheftMultiplayer.Client.GUI.d.ts" />

@@ -26,10 +26,10 @@ namespace lsrp_gamemode
         public static readonly string COLOR_CHAT3 = "~#999999~";
         public static readonly string COLOR_CHAT4 = "~#555555~";
 
-        // Vehicle owner types
-        public static readonly int VEHICLE_OWNER_NONE = 0;
-        public static readonly int VEHICLE_OWNER_PLAYER = 1;
-        public static readonly int VEHICLE_OWNER_GROUP = 2;
+        // Owner types
+        public static readonly int OWNER_NONE = 0;
+        public static readonly int OWNER_PLAYER = 1;
+        public static readonly int OWNER_GROUP = 2;
 
         // Item places
         public static readonly int PLACE_ITEM_NONE = 0;

@@ -44,7 +44,7 @@ namespace lsrp_gamemode.Player
 
             // Items
             ItemManager.LoadPlayerItems(player);
-            ItemManager.Debug_ListPlayerItems(player);
+            //ItemManager.Debug_ListPlayerItems(player);
 
             if(crash)
             {

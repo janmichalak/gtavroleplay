@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using lsrp_gamemode.Player;
-using GrandTheftMultiplayer.Shared;
 using lsrp_gamemode.Vehicles;
+using lsrp_gamemode.Doors;
+using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 
 namespace lsrp_gamemode
@@ -122,6 +123,33 @@ namespace lsrp_gamemode
                 }
             }
         }
+
+        [Command("ad", "Użycie: /ad [stworz | usun | nazwa | model]", GreedyArg = true)]
+        public void cmd_Ad(Client player, string input)
+        {
+            if(player.getData("admin") < 1)
+            {
+                API.shared.sendNotificationToPlayer(player, "Brak uprawnień!");
+                return;
+            }
+
+            string[] param = input.Split(null);
+            if(param[0] == "stworz") // ad stworz nazwa model
+            {
+                if(param.Length != 3)
+                {
+                    API.sendChatMessageToPlayer(player, "Użycie: /ad stworz [nazwa] [model]");
+                    return;
+                }
+
+                String name = param[1];
+                int model = Int32.Parse(param[2]);
+
+                Door d = Door.Create(model, name, player.position, player.dimension);
+                API.sendNotificationToPlayer(player, "Pomyślnie utworzono drzwi!");
+            }
+        }
+
         [Command("ap", "Użycie: /ap [stworz | usun | nazwa | owner | value1 | value2]", GreedyArg = true)]
         public void cmd_Ap(Client player, string input)
         {
@@ -262,7 +290,7 @@ namespace lsrp_gamemode
 
                         VehicleClass vc = API.getEntityData(vehicle, "data");
                         PlayerClass pc = target.getData("data");
-                        vc.ownertype = Config.VEHICLE_OWNER_PLAYER;
+                        vc.ownertype = Config.OWNER_PLAYER;
                         vc.owner = pc.uid;
 
                         VehicleClass.UpdateVehicleOwner(vc.uid, vc.ownertype, vc.owner);

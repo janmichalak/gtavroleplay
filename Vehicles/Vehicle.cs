@@ -21,7 +21,7 @@ namespace lsrp_gamemode.Vehicles
         public int color2 = 0;
 
         public int owner = 0;
-        public int ownertype = Config.VEHICLE_OWNER_NONE;
+        public int ownertype = Config.OWNER_NONE;
 
         public string plate;
 
@@ -51,7 +51,7 @@ namespace lsrp_gamemode.Vehicles
             vc.model = model;
             vc.color1 = col1;
             vc.color2 = col2;
-            vc.ownertype = Config.VEHICLE_OWNER_NONE;
+            vc.ownertype = Config.OWNER_NONE;
             vc.owner = 0;
 
             // Insert to SQL
@@ -176,7 +176,7 @@ namespace lsrp_gamemode.Vehicles
         public static void LoadVehicles()
         {
             API.shared.consoleOutput("[load] Rozpoczynam wczytywanie pojazdów...");
-            Database.command.CommandText = String.Format("SELECT * FROM vehicles WHERE veh_ownertype != {0}", Config.VEHICLE_OWNER_PLAYER);
+            Database.command.CommandText = String.Format("SELECT * FROM vehicles WHERE veh_ownertype != {0}", Config.OWNER_PLAYER);
             Database.Reader = Database.command.ExecuteReader();
 
             var r = Database.Reader; int loaded = 0;
@@ -244,7 +244,7 @@ namespace lsrp_gamemode.Vehicles
         public static Dictionary<int, int> ListPlayerVehicles(Client player)
         {
             PlayerClass pc = player.getData("data");
-            Database.command.CommandText = String.Format("SELECT * FROM vehicles WHERE veh_ownertype = {0} AND veh_owner = {1}", Config.VEHICLE_OWNER_PLAYER, pc.uid);
+            Database.command.CommandText = String.Format("SELECT * FROM vehicles WHERE veh_ownertype = {0} AND veh_owner = {1}", Config.OWNER_PLAYER, pc.uid);
             Database.Reader = Database.command.ExecuteReader();
 
             var r = Database.Reader;
@@ -346,11 +346,11 @@ namespace lsrp_gamemode.Vehicles
         {
             PlayerClass pc = player.getData("data");
             VehicleClass vc = API.shared.getEntityData(vehicle, "data");
-            if (vc.ownertype == Config.VEHICLE_OWNER_NONE && player.getData("admin") > 0)
+            if (vc.ownertype == Config.OWNER_NONE && player.getData("admin") > 0)
                 return true;
-            if (vc.ownertype == Config.VEHICLE_OWNER_PLAYER && (player.getData("admin") > 0 || vc.owner == pc.uid))
+            if (vc.ownertype == Config.OWNER_PLAYER && (player.getData("admin") > 0 || vc.owner == pc.uid))
                 return true;
-            if (vc.ownertype == Config.VEHICLE_OWNER_GROUP && (player.getData("admin") > 0))
+            if (vc.ownertype == Config.OWNER_GROUP && (player.getData("admin") > 0))
                 return true;
             return false;
         }

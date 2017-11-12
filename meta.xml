@@ -35,6 +35,10 @@
     <!-- Vehicle -->
     <script src="Vehicles/Mods.cs" type="server" lang="csharp" />
     <script src="Vehicles/Vehicle.cs" type="server" lang="csharp" />
+
+    <!-- Doors -->
+    <script src="Doors/Door.cs" type="server" lang="csharp" />
+    <script src="Doors/DoorManager.cs" type="server" lang="csharp" />
   
     <!-- Items -->
     <script src="Items/Item.cs" type="server" lang="csharp" />
