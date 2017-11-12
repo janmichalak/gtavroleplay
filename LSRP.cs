@@ -12,6 +12,7 @@ using lsrp_gamemode.Misc;
 using lsrp_gamemode.Player;
 using lsrp_gamemode.Vehicles;
 using lsrp_gamemode.Items;
+using lsrp_gamemode.Doors;
 using System.Timers;
 
 namespace lsrp_gamemode
@@ -38,6 +39,7 @@ namespace lsrp_gamemode
             API.onPlayerDisconnected += PlayerClass.OnPlayerDisconnectedHandler;
             API.onChatMessage += PlayerClass.OnChatMessageHandler;
             API.onChatCommand += PlayerClass.OnChatCommandHandler;
+            API.onEntityEnterColShape += OnEntityEnterColShapeHandler;
 
             // Set world time
             API.setTime(20, 0);
@@ -56,6 +58,7 @@ namespace lsrp_gamemode
             // Loads
             VehicleClass.LoadVehicles();
             ItemManager.LoadItems();
+            DoorManager.LoadDoors();
         }
 
         // OnMinuteTimer
@@ -88,6 +91,27 @@ namespace lsrp_gamemode
         private void API_onServerResourceStart(string resource)
         {
             
+        }
+
+        // OnEntityEnterColShapeHandler
+        private void OnEntityEnterColShapeHandler(ColShape shape, NetHandle entity)
+        {
+            // Player entered colshape
+            if (API.getEntityType(entity) == EntityType.Player)
+            {
+                Client player = API.getPlayerFromHandle(entity); // Fetch the Client
+       
+                // Is it a door
+                if(Door.DoorSpheres.ContainsKey(shape))
+                {
+                    Door door = Door.DoorSpheres[shape];
+                    if(door.entervw == player.dimension)
+                    {
+                        
+                        API.shared.sendNotificationToPlayer(player, String.Format("Jesteœ w drzwiach {0}, wciœnij E aby wejœæ do œrodka.", door.name));
+                    }
+                }
+            }
         }
     }
 }
