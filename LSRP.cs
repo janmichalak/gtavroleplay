@@ -108,7 +108,7 @@ namespace lsrp_gamemode
                     if(door.entervw == player.dimension)
                     {
                         
-                        API.shared.sendNotificationToPlayer(player, String.Format("Jesteœ w drzwiach {0}, wciœnij E aby wejœæ do œrodka.", door.name));
+                        API.shared.sendNotificationToPlayer(player, String.Format("Jesteœ w drzwiach {0} (ID: {1}), wciœnij E aby wejœæ do œrodka.", door.name, door.id));
                     }
                 }
             }

@@ -18,6 +18,7 @@ namespace lsrp_gamemode.Doors
         public static Dictionary<ColShape, Door> DoorSpheres = new Dictionary<ColShape, Door>();
 
         #region fields
+        public int id = GetFreeID();
         public int uid = 0;
 
         public int owner = 0;
@@ -62,7 +63,7 @@ namespace lsrp_gamemode.Doors
             Database.command.CommandText += String.Format("VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')",
                 name, pos.X.ToString().Replace(",", "."), pos.Y.ToString().Replace(",", "."), pos.Z.ToString().Replace(",", "."), vw, type);
             Database.command.ExecuteNonQuery();
-
+            door.id = GetFreeID();
             door.uid = (int)Database.command.LastInsertedId;
             door.name = name;
             door.enterx = pos.X;
@@ -74,6 +75,29 @@ namespace lsrp_gamemode.Doors
 
             DoorList.Add(door);
             return door;
+        }
+        public static Door GetDoorByID(int id)
+        {
+            for (int i = 0; i < DoorList.Count; i++)
+            {
+                Door door = DoorList[i];
+                if(door.id == id)
+                {
+                    return door;
+                }
+            }
+            return null;
+        }
+        public static int GetFreeID()
+        {
+            for(int i= 0; i<DoorList.Count;i++)
+            {
+                if(GetDoorByID(i) == null)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
         #endregion
     }
