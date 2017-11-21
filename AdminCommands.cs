@@ -144,9 +144,24 @@ namespace lsrp_gamemode
 
                 String name = param[1];
                 int model = Int32.Parse(param[2]);
-
                 Door d = Door.Create(model, name, player.position, player.dimension);
                 API.sendNotificationToPlayer(player, "Pomyślnie utworzono drzwi!");
+            }
+            if(param[0] == "usun")
+            {
+                int id = Convert.ToInt32(param[1]);
+                if (param.Length != 2)
+                {
+                    API.sendChatMessageToPlayer(player, "Użycie: /ad usun [UID]");
+                    return;
+                }
+                if (Door.GetDoorByID(id) == null)
+                {
+                    API.sendChatMessageToPlayer(player, "Nie ma drzwi o takim ID.");
+                    return;
+                }
+                API.shared.consoleOutput("Administrator {0} usunął drzwi {1} (UID:{2})", player.name, Door.GetDoorByID(id).name, Convert.ToString(Door.GetDoorByID(id).uid));
+                Door.Delete(Door.GetDoorByID(id));
             }
         }
 
