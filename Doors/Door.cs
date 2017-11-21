@@ -18,7 +18,6 @@ namespace lsrp_gamemode.Doors
         public static Dictionary<ColShape, Door> DoorSpheres = new Dictionary<ColShape, Door>();
 
         #region fields
-        public int id = GetFreeID();
         public int uid = 0;
 
         public int owner = 0;
@@ -43,9 +42,9 @@ namespace lsrp_gamemode.Doors
         public Marker marker = null;
         public int markerType = 0;
 
-        public int colr = 255;
+        public int colr = 153;
         public int colg = 255;
-        public int colb = 255;
+        public int colb = 51;
         public int alpha = 255;
 
         //public SphereColShape entershape = null;
@@ -56,14 +55,10 @@ namespace lsrp_gamemode.Doors
         public static Door Create(int type, String name, Vector3 pos, int vw)
         {
             Door door = new Door();
-            Marker marker = API.shared.createMarker(type, pos, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 
-                door.alpha, door.colr, door.colg, door.colb, vw);
-
             Database.command.CommandText = "INSERT INTO doors (name, enterx, entery, enterz, entervw, markertype) ";
             Database.command.CommandText += String.Format("VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')",
                 name, pos.X.ToString().Replace(",", "."), pos.Y.ToString().Replace(",", "."), pos.Z.ToString().Replace(",", "."), vw, type);
             Database.command.ExecuteNonQuery();
-            door.id = GetFreeID();
             door.uid = (int)Database.command.LastInsertedId;
             door.name = name;
             door.enterx = pos.X;
@@ -71,33 +66,33 @@ namespace lsrp_gamemode.Doors
             door.enterz = pos.Z;
             door.entervw = vw;
             door.markerType = type;
+            Marker marker = API.shared.createMarker(type, pos, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1),
+            door.alpha, door.colr, door.colg, door.colb, vw);
             door.marker = marker;
-
+            SphereColShape entershape = API.shared.createSphereColShape(new Vector3(door.enterx, door.entery, door.enterz), 2f);
+            Door.DoorSpheres.Add(entershape, door);
             DoorList.Add(door);
             return door;
         }
+        public static void Delete(Door door)
+        {
+            Database.command.CommandText = String.Format("DELETE FROM doors WHERE uid ={0}", door.uid);
+            Database.command.ExecuteNonQuery();
+            var item = Door.DoorSpheres.First(kvp => kvp.Value == door);
+            Door.DoorSpheres.Remove(item.Key);
+            API.shared.deleteEntity(door.marker);
+            DoorList.Remove(door);
+        }
         public static Door GetDoorByID(int id)
         {
-            for (int i = 0; i < DoorList.Count; i++)
+            foreach (var door in DoorList)
             {
-                Door door = DoorList[i];
-                if(door.id == id)
+                if (door.uid == id)
                 {
                     return door;
                 }
             }
             return null;
-        }
-        public static int GetFreeID()
-        {
-            for(int i= 0; i<DoorList.Count;i++)
-            {
-                if(GetDoorByID(i) == null)
-                {
-                    return i;
-                }
-            }
-            return -1;
         }
         #endregion
     }

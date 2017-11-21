@@ -22,7 +22,6 @@ namespace lsrp_gamemode.Doors
             while (r.Read())
             {
                 Door door = new Door();
-                door.id = Door.GetFreeID();
                 door.uid = r.GetInt32("uid");
                 door.owner = r.GetInt32("owner");
                 door.ownertype = r.GetInt32("ownertype");
