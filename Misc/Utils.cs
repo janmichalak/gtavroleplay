@@ -75,5 +75,26 @@ namespace lsrp_gamemode.Misc
                 string.Format("\"{0}\": [{1}]", d.Key, string.Join(",", d.Value)));
             return "{" + string.Join(",", entries) + "}";
         }
+
+		/**
+		 * Removes unwanted characters from the given string and returns a sanitized version.
+		 * @author patel.milanb
+		 * @source https://stackoverflow.com/questions/11395775/clean-the-string-is-there-any-better-way-of-doing-it
+		 *
+		 * @param String s The string that needs to be sanitized.
+		 * @return String The sanitized string.
+		 */
+		public static String SanitizeString(String s)
+		{
+			String prohibited_chars = "?&^$#@!+-,:;<>’\'-*";
+
+			foreach (char c in prohibited_chars)
+			{
+				s = s.Replace(c.ToString(), string.Empty);
+			}
+
+			return s;
+		}
     }
 }
+ 

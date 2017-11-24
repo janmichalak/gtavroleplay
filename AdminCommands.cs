@@ -11,6 +11,7 @@ using lsrp_gamemode.Vehicles;
 using lsrp_gamemode.Doors;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
+using lsrp_gamemode.Misc;
 
 namespace lsrp_gamemode
 {
@@ -124,46 +125,67 @@ namespace lsrp_gamemode
             }
         }
 
-        [Command("ad", "Użycie: /ad [stworz | usun | nazwa | model]", GreedyArg = true)]
-        public void cmd_Ad(Client player, string input)
-        {
-            if(player.getData("admin") < 1)
-            {
-                API.shared.sendNotificationToPlayer(player, "Brak uprawnień!");
-                return;
-            }
+		[Command("ad", "Użycie: /ad [stworz | usun | nazwa | model]", GreedyArg = true)]
+		public void cmd_Ad(Client player, string input)
+		{
+			if(player.getData("admin") < 1)
+			{
+				API.shared.sendNotificationToPlayer(player, "Brak uprawnień!");
+				return;
+			}
 
-            string[] param = input.Split(null);
-            if(param[0] == "stworz") // ad stworz nazwa model
-            {
-                if(param.Length != 3)
-                {
-                    API.sendChatMessageToPlayer(player, "Użycie: /ad stworz [nazwa] [model]");
-                    return;
-                }
+			string[] param = input.Split(null);
 
-                String name = param[1];
-                int model = Int32.Parse(param[2]);
-                Door d = Door.Create(model, name, player.position, player.dimension);
-                API.sendNotificationToPlayer(player, "Pomyślnie utworzono drzwi!");
-            }
-            if(param[0] == "usun")
-            {
-                int id = Convert.ToInt32(param[1]);
-                if (param.Length != 2)
-                {
-                    API.sendChatMessageToPlayer(player, "Użycie: /ad usun [UID]");
-                    return;
-                }
-                if (Door.GetDoorByID(id) == null)
-                {
-                    API.sendChatMessageToPlayer(player, "Nie ma drzwi o takim ID.");
-                    return;
-                }
-                API.shared.consoleOutput("Administrator {0} usunął drzwi {1} (UID:{2})", player.name, Door.GetDoorByID(id).name, Convert.ToString(Door.GetDoorByID(id).uid));
-                Door.Delete(Door.GetDoorByID(id));
-            }
-        }
+			if(param[0] == "stworz") // ad stworz nazwa model
+			{
+				if(param.Length != 3)
+				{
+					API.sendChatMessageToPlayer(player, "Użycie: /ad stworz [model] [nazwa]");
+					return;
+				}
+
+				int model = Int32.Parse(param[1]);
+				String name = param[2];
+
+				Location loc = new Location();
+				loc.pos = player.position;
+				loc.vw = player.dimension;
+
+				DoorManager dm = DoorManager.getInstance();
+				Door door = dm.Create(model, loc, name);
+
+				if(door != null)
+				{
+					API.sendNotificationToPlayer(player, "Pomyślnie utworzono drzwi!");
+					return;
+				} else
+				{
+					API.sendNotificationToPlayer(player, "Wystąpił problem podczas tworzenia drzwi!");
+					return;
+				}
+			}
+			if(param[0] == "usun")
+			{
+				int uid = Convert.ToInt32(param[1]);
+				if (param.Length != 2)
+				{
+					API.sendChatMessageToPlayer(player, "Użycie: /ad usun [UID]");
+					return;
+				}
+
+				DoorManager dm = DoorManager.getInstance();
+				Door door = dm.Find(uid);
+
+				if(door == null) { 
+					API.sendChatMessageToPlayer(player, "Nie ma drzwi o takim UID.");
+					return;
+				}
+				
+				API.shared.consoleOutput("Administrator {0} usunął drzwi {1} (UID:{2})", player.name, door.name, Convert.ToString(uid));
+				dm.Delete(door);
+				return;
+			}
+		}
 
         [Command("ap", "Użycie: /ap [stworz | usun | nazwa | owner | value1 | value2]", GreedyArg = true)]
         public void cmd_Ap(Client player, string input)

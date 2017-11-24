@@ -1,8 +1,10 @@
 ﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
+using lsrp_gamemode.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,89 +13,118 @@ using System.Threading.Tasks;
 
 namespace lsrp_gamemode.Doors
 {
-    public class Door
-    {
-        // Door List
-        public static List<Door> DoorList = new List<Door>();
-        public static Dictionary<ColShape, Door> DoorSpheres = new Dictionary<ColShape, Door>();
+	public class Door
+	{
+		// Identifiables
+		public int uid;
+		public String name = "Drzwi";
 
-        #region fields
-        public int uid = 0;
+		// Ownership
+		public int owner = 0;
+		public int ownertype = Config.OWNER_NONE;
 
-        public int owner = 0;
-        public int ownertype = Config.OWNER_NONE;
+		// Location
+		public Location enter;
+		public Location exit;
+		
+		// World Objects
+		public Marker marker = null;
+		public int markerType = 0;
+		public Color color;
+	
+		/**
+		 * Constructor which takes a UID at minimum.
+		 * 
+		 * @param int uid The database UID of the door we're dealing with.
+		 */
+		public Door(int uid)
+		{
+			this.uid = uid;
+		}
 
-        public String name = "Drzwi";
+		/**
+		 * Updates all the door parameters in the database.
+		 */
+		public void Save()
+		{
+			DoorManager dm = DoorManager.getInstance();
+			Door self = dm.Find(this.uid);
+			dm.Save(self);
+		}
 
-        public float enterx = 0f;
-        public float entery = 0f;
-        public float enterz = 0f;
+		// *** Mutators *** //
 
-        public float exitx = 0f;
-        public float exity = 0f;
-        public float exitz = 0f;
+		/**
+		 * Sets the Door enterance location.
+		 * @param Location loc The new location of the enterance.
+		 */
+		public void SetEnterance(Location loc)
+		{
+			this.enter = loc;
+			this.Save();
+		}
 
-        public int entervw = 1;
-        public int exitvw = 1;
+		/**
+		 * Sets the Door enterance position.
+		 *
+		 * NOTE: This will not update the VW or the angle of the enterance.
+		 *
+		 * @param Location loc The new location of the enterance.
+		 * @param Vector3 pos The new position of the enterance.
+		 */
+		public void SetEnterance(Vector3 pos)
+		{
+			this.enter.pos = pos;
+			this.Save();
+		}
 
-        public float enterangle = 0f;
-        public float exitangle = 0f;
+		/**
+		 * Sets the Door exit location.
+		 * @param Location loc The new location of the exit.
+		 */
+		public void SetExit(Location loc)
+		{
+			this.exit = loc;
+			this.Save();
+		}
 
-        public Marker marker = null;
-        public int markerType = 0;
+		/**
+		 * Sets the Door exit position.
+		 *
+		 * NOTE: This will not update the VW or the angle of the exit.
+		 *
+		 * @param Location loc The new location of the exit.
+		 * @param Vector3 pos The new position of the exit.
+		 */
+		public void SetExit(Vector3 pos)
+		{
+			this.exit.pos = pos;
+			this.Save();
+		}
 
-        public int colr = 153;
-        public int colg = 255;
-        public int colb = 51;
-        public int alpha = 255;
+		/** 
+		 * Renames the door.
+		 *
+		 * @param String new_name New name given to this door.
+		 */
+		public void Rename(String new_name)
+		{
+			this.name = Utils.SanitizeString(new_name);
+			this.Save();
+		}
 
-        //public SphereColShape entershape = null;
-        //public SphereColShape exitshape = null;
-        #endregion
+		// *** Utilities *** //
 
-        #region methods
-        public static Door Create(int type, String name, Vector3 pos, int vw)
-        {
-            Door door = new Door();
-            Database.command.CommandText = "INSERT INTO doors (name, enterx, entery, enterz, entervw, markertype) ";
-            Database.command.CommandText += String.Format("VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')",
-                name, pos.X.ToString().Replace(",", "."), pos.Y.ToString().Replace(",", "."), pos.Z.ToString().Replace(",", "."), vw, type);
-            Database.command.ExecuteNonQuery();
-            door.uid = (int)Database.command.LastInsertedId;
-            door.name = name;
-            door.enterx = pos.X;
-            door.entery = pos.Y;
-            door.enterz = pos.Z;
-            door.entervw = vw;
-            door.markerType = type;
-            Marker marker = API.shared.createMarker(type, pos, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1),
-            door.alpha, door.colr, door.colg, door.colb, vw);
-            door.marker = marker;
-            SphereColShape entershape = API.shared.createSphereColShape(new Vector3(door.enterx, door.entery, door.enterz), 2f);
-            Door.DoorSpheres.Add(entershape, door);
-            DoorList.Add(door);
-            return door;
-        }
-        public static void Delete(Door door)
-        {
-            Database.command.CommandText = String.Format("DELETE FROM doors WHERE uid ={0}", door.uid);
-            Database.command.ExecuteNonQuery();
-            var item = Door.DoorSpheres.First(kvp => kvp.Value == door);
-            Door.DoorSpheres.Remove(item.Key);
-            API.shared.deleteEntity(door.marker);
-            DoorList.Remove(door);
-        }
-        public static Door GetDoorByID(int id)
-        {
-            foreach (var door in DoorList)
-            {
-                if (door.uid == id)
-                {
-                    return door;
-                }
-            }
-            return null;
-        }
-        #endregion
-    }
+		/**
+		 * Measure the distance between this and another door.
+		 *
+		 * @param Door door An instance of a door to which we're measuring the distance.
+		 * @return float The distance between the two doors.
+		 */
+		public float Distance(Door door)
+		{
+			return Vector3.Distance(this.enter.pos, door.enter.pos);
+		}
+
+	}
 }
